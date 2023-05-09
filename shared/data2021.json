@@ -1,0 +1,1062 @@
+{
+	"students": [
+		{
+			"participant_ru": "Илие Даниель Апостол",
+			"participant_en": "Ilie Daniel Apostol",
+			"team": "'Tudor Vianu' National College of Computer Science",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				100
+			],
+			"problems2": [
+				100,
+				100,
+				100,
+				100,
+				100
+			],
+			"place": "1DG, HML",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Таймас Корганбайев",
+			"participant_en": "Taimas Korganbayev",
+			"team": "Almaty city",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				100
+			],
+			"problems2": [
+				100,
+				20,
+				92,
+				100,
+				100
+			],
+			"place": "1DG, HML",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Алтаир Ашуров",
+			"participant_en": "Altair Ashurov",
+			"team": "AOO 'Nazarbayev Intellectual School'",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				50
+			],
+			"problems2": [
+				100,
+				20,
+				84,
+				100,
+				100
+			],
+			"place": "1DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Снг Джеймс (Сан Джие)",
+			"participant_en": "Sng James (Sun Jie)",
+			"team": "NUS High School of Mathematics and Science",
+			"country_ru": "Сингапур",
+			"country_en": "Singapore",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				100
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Тюдор Иван",
+			"participant_en": "Tudor Ivan",
+			"team": "'Tudor Vianu' National College of Computer Science",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				0
+			],
+			"problems2": [
+				100,
+				100,
+				16,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Мукхаммедариф Сакхмолдин",
+			"participant_en": "Mukhammadarif Sakhmoldin",
+			"team": "AOO 'Nazarbayev Intellectual School'",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan ",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				20
+			],
+			"problems2": [
+				100,
+				20,
+				72,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Карол Лука Гасан",
+			"participant_en": "Carol Luca Gasan",
+			"team": "Saint Sava National College",
+			"country_ru": "Румыния",
+			"country_en": "Romania ",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				20
+			],
+			"problems2": [
+				100,
+				20,
+				60,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Флавию-Кристиан Верде",
+			"participant_en": "Flaviu-Cristian Verde",
+			"team": "'Tudor Vianu' National College of Computer Science",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				20
+			],
+			"problems2": [
+				100,
+				20,
+				36,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Стефан Попа",
+			"participant_en": "Stefan Popa",
+			"team": "'Tudor Vianu' National College of Computer Science",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				40,
+				100,
+				87
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Рамазан Пердебай",
+			"participant_en": "Ramazan Perdebai",
+			"team": "Karaganda region",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				68,
+				100,
+				58
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Никита Барыкин",
+			"participant_en": "Nikita Barykin",
+			"team": "SSC NSU (Physics and Mathematics School at Novosibirsk State University)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				56,
+				100,
+				58
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Арсен Мужиков",
+			"participant_en": "Arsen Muzhikov",
+			"team": "NJSC 'Republican Physics and Mathematics School' Nur-Sultan city",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				100,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Каньюш Мукхамедкарим",
+			"participant_en": "Kanysh Mukhamedkarim",
+			"team": "East Kazakhstan Region",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				80,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Динмукхамед Оралкханов",
+			"participant_en": "Dinmukhamed Oralkhanov",
+			"team": "East Kazakhstan Region",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan ",
+			"problems1": [
+				100,
+				100,
+				100,
+				60,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				100
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Егор Шевченко",
+			"participant_en": "Egor Shevchenko",
+			"team": "SSC KSU ('IT-lyceum' of Kazan Federal University)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				100,
+				100,
+				60,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				100
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Нурстан Дуисенглиев",
+			"participant_en": "Nurstan Duisengaliyev",
+			"team": "Almaty city",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				60,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				100
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Имран Турганов",
+			"participant_en": "Imran Turganov",
+			"team": "NJSC 'Republican Physics and Mathematics School', Almaty city",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				60,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				40,
+				30,
+				100
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Джосеф Оливер Лим",
+			"participant_en": "Joseph Oliver Lim",
+			"team": "Wardaya College",
+			"country_ru": "Индонезия",
+			"country_en": "Indonesia",
+			"problems1": [
+				100,
+				100,
+				100,
+				20,
+				0
+			],
+			"problems2": [
+				100,
+				0,
+				28,
+				100,
+				100
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Акрам Рахметулла",
+			"participant_en": "Akram Rakhmetulla",
+			"team": "NJSC 'Republican Physics and Mathematics School' Nur-Sultan city",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				40,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				48,
+				70,
+				58
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Тимур Зуков",
+			"participant_en": "Timur Zykov",
+			"team": "1st national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia ",
+			"problems1": [
+				100,
+				100,
+				100,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				100,
+				100,
+				0,
+				0
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Йемар Садубеков",
+			"participant_en": "Yemar Sadybekov",
+			"team": "AOO 'Nazarbayev Intellectual School' ",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan ",
+			"problems1": [
+				100,
+				100,
+				0,
+				40,
+				20
+			],
+			"problems2": [
+				100,
+				50,
+				12,
+				100,
+				58
+			],
+			"place": "HMLP",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Михаил Пономарйов",
+			"participant_en": "Mikhail Ponomaryov",
+			"team": "NJSC 'Republican Physics and Mathematics School' Nur-Sultan city",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				58
+			],
+			"place": "HMLP",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Маргарита Петрова",
+			"participant_en": "Margarita Petrova",
+			"team": "Center for the preparation of the Olympic team at the Lyceum Boarding School No. 61",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				95,
+				100,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				30,
+				58
+			],
+			"place": "HMLP",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Темирлан Жарульгамиссов",
+			"participant_en": "Temirlan Zharylgamyssov ",
+			"team": "Nur-Sultan city ",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan ",
+			"problems1": [
+				100,
+				90,
+				0,
+				20,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				16,
+				70,
+				87
+			],
+			"place": "HMLP",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Амир Нуриев",
+			"participant_en": "Amir Nuriyev",
+			"team": "AOO 'Nazarbayev Intellectual School'",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				35,
+				80,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				58
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Арман Иссайев",
+			"participant_en": "Arman Issayev ",
+			"team": "Nur-Sultan city",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				90,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				80,
+				58
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Ерхан Такауов",
+			"participant_en": "Erjan Takauov",
+			"team": "Aktobe Region",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan ",
+			"problems1": [
+				55,
+				95,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				8,
+				80,
+				87
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Владислав Паволвский",
+			"participant_en": "Vladislav Pavlovsky ",
+			"team": "2nd national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				100,
+				58
+			],
+			"place": "SP",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Василий Парников",
+			"participant_en": "Vasily Parnikov ",
+			"team": "1st national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				25,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				16,
+				40,
+				58
+			],
+			"place": "SP",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Бекнур Лес",
+			"participant_en": "Beknur Les",
+			"team": "Jambyl region",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				100,
+				100,
+				100,
+				20,
+				0
+			],
+			"problems2": [
+				4,
+				0,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Карим Сулейманов",
+			"participant_en": "Karim Suleimanov",
+			"team": "SSC KSU ('IT-lyceum' of Kazan Federal University)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				15,
+				0,
+				20,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				0,
+				34
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Влад Стефан Станку",
+			"participant_en": "Vlad Stefan Stancu",
+			"team": "Liceul Teoretic Național",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				30,
+				35,
+				0,
+				20,
+				0
+			],
+			"problems2": [
+				68,
+				0,
+				0,
+				0,
+				87
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Ерик Паскалев",
+			"participant_en": "Erik Paskalev",
+			"team": "National High School of Science and Mathematics 'Akad. Lubomir Chakalov'",
+			"country_ru": "Булгария",
+			"country_en": "Bulgaria",
+			"problems1": [
+				30,
+				50,
+				20,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				0,
+				16
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Анай Кассимкхан",
+			"participant_en": "Anai Kassymkhan",
+			"team": "Pavlodar region",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				40,
+				35,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				96,
+				20,
+				0,
+				20,
+				16
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Лена Уваровская",
+			"participant_en": "Lena Uvarovskaya",
+			"team": "1st national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia ",
+			"problems1": [
+				30,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				0,
+				0,
+				0,
+				58
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Дархан Семенов",
+			"participant_en": "Darkhan Semyonov",
+			"team": "2nd national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				20,
+				0,
+				0,
+				58
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Аркадий Дмитривев",
+			"participant_en": "Arkady Dmitriev",
+			"team": "1st national team, Republic of Sakha (Yakutia) ",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				0,
+				0,
+				58
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Болашак Кульмухамбетов",
+			"participant_en": "Bolashak Kulmuhambetov",
+			"team": "Aktobe Region",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				20,
+				20,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				68,
+				20,
+				0,
+				30,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Георгий Гритченко",
+			"participant_en": "Georgy Gritchenko",
+			"team": "St. Petersburg State University Academic Gymnasium named after D.K. Faddeev",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				0,
+				34
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Андрей Кузьмин",
+			"participant_en": "Andrey Kuzmin",
+			"team": "1st national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				100,
+				20,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Мирон Макаров",
+			"participant_en": "Miron Makarov",
+			"team": "2nd national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				20,
+				0,
+				0,
+				58
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Ксения Фролова",
+			"participant_en": "Ksenia Frolova",
+			"team": "2nd national team,Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				10,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				44,
+				0,
+				12,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Дуолан Гаврильев",
+			"participant_en": "Duolan Gavriliev",
+			"team": "2nd national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				20,
+				10,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				4,
+				20,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Таисийя Оконешникова",
+			"participant_en": "Taisiya Okoneshnikova",
+			"team": "2nd national team, Republic of Sakha (Yakutia)",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				5,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Ильяс Алимбеков",
+			"participant_en": "Ilyas Alimbekov",
+			"team": "Jambyl region",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				0,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Мухаммад Алфатих Арразий",
+			"participant_en": "Muhammad Alfatih Arrazy",
+			"team": "Wardaya College",
+			"country_ru": "Индонезия",
+			"country_en": "Indonesia",
+			"problems1": [
+				0,
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		}
+	]
+}

@@ -1,0 +1,395 @@
+{
+	"students": [
+		{
+			"participant_ru": "Туфанов Игорь",
+			"participant_en": "Tufanov Igor",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"city": "Владивосток",
+			"problems1": [
+				79,
+				10,
+				100
+			],
+			"problems2": [
+				100,
+				100,
+				100
+			],
+			"place": "1",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Буруиана Филип",
+			"participant_en": "Buruiana Filip",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				100,
+				30,
+				100
+			],
+			"problems2": [
+				100,
+				100,
+				40
+			],
+			"place": "2",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Гладченко Максим",
+			"participant_en": "Gladchenko Maxim",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				79,
+				10,
+				90
+			],
+			"problems2": [
+				82,
+				100,
+				60
+			],
+			"place": "3",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Стансиу Валентин",
+			"participant_en": "Stanciu Valentin",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				54,
+				0,
+				100
+			],
+			"problems2": [
+				100,
+				95,
+				50
+			],
+			"place": "4",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Садыков Жомарт",
+			"participant_en": "Sadykov Zhomart",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakstan",
+			"problems1": [
+				87,
+				10,
+				30
+			],
+			"problems2": [
+				86,
+				100,
+				80
+			],
+			"place": "5",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Гренкин Глеб",
+			"participant_en": "Grenkin Gleb",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"country": "Владивосток",
+			"problems1": [
+				79,
+				20,
+				100
+			],
+			"problems2": [
+				82,
+				30,
+				40
+			],
+			"place": "6",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Минюк Антон",
+			"participant_en": "Minyuk Anton",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"country": "Якутск",
+			"problems1": [
+				69,
+				5,
+				29
+			],
+			"problems2": [
+				93,
+				5,
+				85
+			],
+			"place": "7",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Жуплев Антон",
+			"participant_en": "Juplev Anton",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"country": "Владивосток",
+			"problems1": [
+				67,
+				25,
+				0
+			],
+			"problems2": [
+				53,
+				100,
+				40
+			],
+			"place": "8",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Старостин Петр",
+			"participant_en": "Starostin Petr",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				86,
+				10,
+				40
+			],
+			"problems2": [
+				78,
+				5,
+				60
+			],
+			"place": "9",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Дьяконов Айтал",
+			"participant_en": "Dyakonov Aytal",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"region": "Ленский край",
+			"problems1": [
+				79,
+				0,
+				0
+			],
+			"problems2": [
+				93,
+				10,
+				20
+			],
+			"place": "10",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Винокуров Павел",
+			"participant_en": "Vinokurov Pavel",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"country": "Якутск",
+			"problems1": [
+				54,
+				25,
+				2
+			],
+			"problems2": [
+				22,
+				30,
+				50
+			],
+			"place": "11",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Ганиев Евгений",
+			"participant_en": "Ganiev Evgeniy",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				79,
+				5,
+				0
+			],
+			"problems2": [
+				50,
+				0,
+				30
+			],
+			"place": "12",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Слепцов Василий",
+			"participant_en": "Slepcov Vasiliy",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"region": "Общество Дьо5ур",
+			"problems1": [
+				45,
+				0,
+				5
+			],
+			"problems2": [
+				0,
+				5,
+				85
+			],
+			"place": "13",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Высоцкий Петр",
+			"participant_en": "Visotskiy Petr",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"region": "Ленский край",
+			"problems1": [
+				39,
+				0,
+				30
+			],
+			"problems2": [
+				64,
+				0,
+				0
+			],
+			"place": "14",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Шарин Владимир",
+			"participant_en": "Sharin Vladimir",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				72,
+				25,
+				0
+			],
+			"problems2": [
+				0,
+				5,
+				20
+			],
+			"place": "15-16",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Кривогорницын Александр",
+			"participant_en": "Krivogornitsyn Aleksandr",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"region": "Общество Дьо5ур",
+			"problems1": [
+				62,
+				0,
+				5
+			],
+			"problems2": [
+				0,
+				5,
+				50
+			],
+			"place": "15-16",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Лукачевская Прасковья",
+			"participant_en": "Lukachevskaya Praskovya",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"country": "Общество Дьо5ур",
+			"problems1": [
+				52,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				50
+			],
+			"place": "17",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Васильев Андрей",
+			"participant_en": "Vasilyev Andrey",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"city": "Якутск",
+			"problems1": [
+				61,
+				0,
+				10
+			],
+			"problems2": [
+				0,
+				10,
+				20
+			],
+			"place": "18",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Коротун Владислав",
+			"participant_en": "Korotun Vladislav",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"region": "Ленский край",
+			"problems1": [
+				17,
+				0,
+				0
+			],
+			"problems2": [
+				47,
+				5,
+				30
+			],
+			"place": "19",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Менг Фанлей",
+			"participant_en": "Meng Fanlei",
+			"country_ru": "Китай",
+			"country_en": "China",
+			"problems1": [
+				37,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				5,
+				0
+			],
+			"place": "20",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Степанов Евгений",
+			"participant_en": "Stepanov Evgeniy",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"city": "Иркутск",
+			"problems1": [
+				39,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				0
+			],
+			"place": "21",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		}
+	]
+}

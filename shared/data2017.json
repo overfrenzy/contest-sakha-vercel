@@ -1,0 +1,384 @@
+{
+	"students": [
+		{
+			"participant_ru": "Ситару Богдан",
+			"participant_en": "Sitaru Bogdan",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				25,
+				100,
+				100,
+				72
+			],
+			"problems2": [
+				100,
+				100,
+				100,
+				100
+			],
+			"place": "1DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Константин-Булига Стефан",
+			"participant_en": "Konstantin-Buliga Ștefan",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				0,
+				100,
+				100,
+				92
+			],
+			"problems2": [
+				100,
+				100,
+				100,
+				100
+			],
+			"place": "1DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Петреску Александру",
+			"participant_en": "Petrescu Alexandru",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				0,
+				100,
+				100,
+				44
+			],
+			"problems2": [
+				100,
+				100,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Морояну Теодор Пьер",
+			"participant_en": "Mmoroianu Theodor Pierre",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				25,
+				100,
+				100,
+				24
+			],
+			"problems2": [
+				100,
+				60,
+				100,
+				100
+			],
+			"place": "2DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Ли Джефри Чун Хин",
+			"participant_en": "Lee Jeffrey Chun Hean",
+			"country_ru": "Сингапур",
+			"country_en": "Singapore ",
+			"problems1": [
+				25,
+				100,
+				100,
+				88
+			],
+			"problems2": [
+				70,
+				20,
+				100,
+				0
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Айткали Акылбек",
+			"participant_en": "Aytkali Akylbek",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				0,
+				100,
+				100,
+				0
+			],
+			"problems2": [
+				94,
+				20,
+				100,
+				88
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Магеряню Ливия",
+			"participant_en": "Măgureanu Livia",
+			"country_ru": "Румыния",
+			"country_en": "Romania",
+			"problems1": [
+				25,
+				100,
+				100,
+				32
+			],
+			"problems2": [
+				23,
+				20,
+				100,
+				12
+			],
+			"place": "3DG",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Булатов Василий Алквиадович",
+			"participant_en": "Bulatov Vasiliy",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				20,
+				25,
+				12
+			],
+			"problems2": [
+				76,
+				20,
+				0,
+				0
+			],
+			"place": "HML",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Максимов Алексей Николаевич",
+			"participant_en": "Maksimov Alexey",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				100,
+				25,
+				0
+			],
+			"problems2": [
+				94,
+				20,
+				0,
+				0
+			],
+			"place": "HML",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Ботаканов Торежан",
+			"participant_en": "Botakanov Torezhan",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				25,
+				40,
+				0,
+				0
+			],
+			"problems2": [
+				52,
+				20,
+				16,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Попов Кирилл Евгеньевич",
+			"participant_en": "Popov Kirill",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				40,
+				0,
+				8
+			],
+			"problems2": [
+				94,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Гаврильев Валерий Валерьевич",
+			"participant_en": "Gavriliev Valeriy",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				25,
+				0
+			],
+			"problems2": [
+				100,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Арменакян Карен Арменакович",
+			"participant_en": "Armenakyan Karen",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				100,
+				20,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Босоева Эльвира Ивановна",
+			"participant_en": "Bosoeva Elvira",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				100,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Захаров Алексей Викторович",
+			"participant_en": "Zakharov Alexey",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				70,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Павлов Степан Павлович",
+			"participant_en": "Pavlov Stepan",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				0,
+				28
+			],
+			"problems2": [
+				18,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Мальцева Юлия Игоревна",
+			"participant_en": "Maltseva Yulia",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				0,
+				8
+			],
+			"problems2": [
+				25,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Ханин Виктор Александрович",
+			"participant_en": "Khanin Viktor",
+			"country_ru": "Россия",
+			"country_en": "Russia",
+			"problems1": [
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				2,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		},
+		{
+			"participant_ru": "Серикова Альбина",
+			"participant_en": "Serikova Albina",
+			"country_ru": "Казахстан",
+			"country_en": "Kazakhstan",
+			"problems1": [
+				0,
+				0,
+				0,
+				0
+			],
+			"problems2": [
+				0,
+				0,
+				0,
+				0
+			],
+			"place": "",
+			"image": "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png"
+		}
+	]
+}
