@@ -1,5 +1,5 @@
-import { useRouter } from 'next/router';
-import { Table, TableBody, TableRow, TableCell } from '@mui/material';
+import { useRouter } from "next/router";
+import { Table, TableBody, TableRow, TableCell } from "@mui/material";
 
 export default function Home({ data }) {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function Home({ data }) {
 }
 
 export async function getServerSideProps() {
-  const res = await fetch('https://contest-sakha.pages.dev/api/data'); //http://localhost:3000/api/data
+  const res = await fetch("https://contest-sakha.pages.dev/api/data"); //http://localhost:3000/api/data
   const data = await res.json();
 
   return {

@@ -1,4 +1,4 @@
-import pool from '../database/database';
+import pool from "../database/database";
 
 export default function Db({ isConnected }) {
   return (
@@ -14,12 +14,12 @@ export default function Db({ isConnected }) {
 }
 
 export async function getServerSideProps() {
-    try {
-      const client = await pool.connect();
-      client.release();
-      return { props: { isConnected: true } };
-    } catch (error) {
-      return { props: { isConnected: false } };
-    }
+  try {
+    const client = await pool.connect();
+    client.release();
+    return { props: { isConnected: true } };
+  } catch (error) {
+    return { props: { isConnected: false } };
   }
+}
 //test version 2 because version 1 is empty because db is empty
