@@ -2,12 +2,7 @@ import { useState } from "react";
 
 export default function HomePage() {
   const [formData, setFormData] = useState({
-    id: "",
     name: "",
-    country: "",
-    school: "",
-    participation: "",
-    award: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
@@ -40,12 +35,7 @@ export default function HomePage() {
 
       // Clear the form data
       setFormData({
-        id: "",
         name: "",
-        country: "",
-        school: "",
-        participation: "",
-        award: "",
       });
     }
   };
