@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
     // Create the Participant table if it does not exist
     await client.query(
-      "CREATE TABLE IF NOT EXISTS Participant (ID INT PRIMARY KEY DEFAULT unique_rowid(), Name STRING)"
+      "CREATE TABLE IF NOT EXISTS Participant (ID INT DEFAULT unique_rowid(), Name STRING, CONSTRAINT primary_key PRIMARY KEY (ID));"
     );
 
     // Insert the data into the Participant table
