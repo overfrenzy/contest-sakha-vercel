@@ -12,11 +12,10 @@ export default async function handler(req, res) {
     const client = await pool.connect();
 
     // Insert the data into the Participant table
-    const { id, name, country, school, participation, award } = req.body;
-    await client.query(
-      "INSERT INTO Participant (Id, Name, Country, School, Participation, Award) VALUES ($1, $2, $3, $4, $5, $6)",
-      [id, name, country, school, participation, award]
-    );
+    const { id, name } = req.body;
+    await client.query("INSERT INTO Participant (Name) VALUES ($1)", [
+      name,
+    ]);
 
     res.status(200).json({ message: "Data inserted successfully" });
 

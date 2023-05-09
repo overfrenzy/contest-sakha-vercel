@@ -56,16 +56,6 @@ export default function HomePage() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Id:
-        <input
-          type="text"
-          name="id"
-          value={formData.id}
-          onChange={handleChange}
-          required
-        />
-      </label>
       <br />
       <label>
         Name:
@@ -73,50 +63,6 @@ export default function HomePage() {
           type="text"
           name="name"
           value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <label>
-        Country:
-        <input
-          type="text"
-          name="country"
-          value={formData.country}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <label>
-        School:
-        <input
-          type="text"
-          name="school"
-          value={formData.school}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <label>
-        Participation:
-        <input
-          type="text"
-          name="participation"
-          value={formData.participation}
-          onChange={handleChange}
-          required
-        />
-      </label>
-      <br />
-      <label>
-        Award:
-        <input
-          type="text"
-          name="award"
-          value={formData.award}
           onChange={handleChange}
           required
         />
