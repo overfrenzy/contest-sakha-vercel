@@ -23,7 +23,7 @@ export default function Home({ data }) {
 }
 
 export async function getServerSideProps() {
-  const res = await fetch("https://contest-sakha.pages.dev/api/data"); //http://localhost:3000/api/data
+  const res = await fetch("https://contest-sakha-vercel.vercel.app/api/data"); //http://localhost:3000/api/data
   const data = await res.json();
 
   return {
