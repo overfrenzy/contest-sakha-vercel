@@ -1,3 +1,4 @@
+/*
 import Image from 'next/image';
 import { Container, Grid, Paper, Typography, Box } from '@mui/material';
 import AppBar from '../components/AppBar2';
@@ -62,4 +63,5 @@ export async function getStaticProps() {
     }
   };
 }
+*/
 //cloudflare pages requires next.js projects to run on edge runtime which in turn requires api, it would be feasible to make api like /api/data to retrieve data from db and send a JSON response
