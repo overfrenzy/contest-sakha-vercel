@@ -1,4 +1,11 @@
 import { useState } from "react";
+import {
+  TextField,
+  Checkbox,
+  FormControlLabel,
+  Button,
+  Box,
+} from "@mui/material";
 
 export default function HomePage() {
   const [formData, setFormData] = useState({
@@ -74,177 +81,136 @@ export default function HomePage() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
-        Name:
-        <input
+      <Box display="flex" flexDirection="column" gap={2}>
+        <TextField
+          label="Name"
           type="text"
           name="name"
           value={formData.name}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Task Name:
-        <input
+        <TextField
+          label="Task Name"
           type="text"
           name="taskName"
           value={formData.taskName}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Task Value:
-        <input
+        <TextField
+          label="Task Value"
           type="number"
           name="taskValue"
           value={formData.taskValue}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Task Solved:
-        <input
-          type="checkbox"
-          name="taskSolved"
-          checked={formData.taskSolved}
-          onChange={(event) =>
-            setFormData({ ...formData, taskSolved: event.target.checked })
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="taskSolved"
+              checked={formData.taskSolved}
+              onChange={(event) =>
+                setFormData({ ...formData, taskSolved: event.target.checked })
+              }
+            />
           }
+          label="Task Solved"
         />
-      </label>
-      <br />
-      <label>
-        Placement Time:
-        <input
+        <TextField
+          label="Placement Time"
           type="text"
           name="placementTime"
           value={formData.placementTime}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Placement Total:
-        <input
+        <TextField
+          label="Placement Total"
           type="text"
           name="placementTotal"
           value={formData.placementTotal}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Country Name:
-        <input
+        <TextField
+          label="Country Name"
           type="text"
           name="countryName"
           value={formData.countryName}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        School Name:
-        <input
+        <TextField
+          label="School Name"
           type="text"
           name="schoolName"
           value={formData.schoolName}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Contest Name:
-        <input
+        <TextField
+          label="Contest Name"
           type="text"
           name="contestName"
           value={formData.contestName}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Contest Year:
-        <input
+        <TextField
+          label="Contest Year"
           type="number"
           name="contestYear"
           value={formData.contestYear}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Contest Tasks Number:
-        <input
+        <TextField
+          label="Contest Tasks Number"
           type="number"
           name="contestTasksNumber"
           value={formData.contestTasksNumber}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Result Grade:
-        <input
+        <TextField
+          label="Result Grade"
           type="text"
           name="resultGrade"
           value={formData.resultGrade}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Result Try:
-        <input
+        <TextField
+          label="Result Try"
           type="text"
           name="resultTry"
           value={formData.resultTry}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Result Time:
-        <input
+        <TextField
+          label="Result Time"
           type="text"
           name="resultTime"
           value={formData.resultTime}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <label>
-        Award Name:
-        <input
+        <TextField
+          label="Award Name"
           type="text"
           name="awardName"
           value={formData.awardName}
           onChange={handleChange}
           required
         />
-      </label>
-      <br />
-      <button type="submit" disabled={submitting}>
-        {submitting ? "Submitting..." : "Submit"}
-      </button>
-      <br />
-      {message && <p>{message}</p>}
+        <Button type="submit" disabled={submitting} variant="contained">
+          {submitting ? "Submitting..." : "Submit"}
+        </Button>
+        {message && <p>{message}</p>}
+      </Box>
     </form>
   );
 }
