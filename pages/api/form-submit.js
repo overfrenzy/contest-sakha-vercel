@@ -18,61 +18,61 @@ export default async function handler(req, res) {
   try {
     await client.connect();
 
-    // Create the Participant table if it does not exist
+    // Create the tables if they do not exist
     await client.query(
-      "CREATE TABLE IF NOT EXISTS Participant (ID INT DEFAULT unique_rowid(), Name STRING, CONSTRAINT primary_key PRIMARY KEY (ID));"
+      `CREATE TABLE IF NOT EXISTS Participant (ID INT DEFAULT unique_rowid(), Name STRING, CONSTRAINT primary_key PRIMARY KEY (ID));
+       CREATE TABLE IF NOT EXISTS Task (ID INT DEFAULT unique_rowid(), Name STRING, Value STRING, Solved BOOLEAN, CONSTRAINT primary_key PRIMARY KEY (ID));
+       CREATE TABLE IF NOT EXISTS Placement (ID INT DEFAULT unique_rowid(), Time INT, Total INT, CONSTRAINT primary_key PRIMARY KEY (ID));
+       CREATE TABLE IF NOT EXISTS Country (ID INT DEFAULT unique_rowid(), Name STRING, CONSTRAINT primary_key PRIMARY KEY (ID));
+       CREATE TABLE IF NOT EXISTS SchoolName (ID INT DEFAULT unique_rowid(), Name STRING, CONSTRAINT primary_key PRIMARY KEY (ID));
+       CREATE TABLE IF NOT EXISTS Contest (ID INT DEFAULT unique_rowid(), Name STRING, Year INT, CONSTRAINT primary_key PRIMARY KEY (ID));
+       CREATE TABLE IF NOT EXISTS ContestTasks (ID INT DEFAULT unique_rowid(), Number STRING, CONSTRAINT primary_key PRIMARY KEY (ID));
+       CREATE TABLE IF NOT EXISTS Result (ID INT DEFAULT unique_rowid(), Grade INT, Try INT, Time INT, CONSTRAINT primary_key PRIMARY KEY (ID));
+       CREATE TABLE IF NOT EXISTS Award (ID INT DEFAULT unique_rowid(), Name STRING, CONSTRAINT primary_key PRIMARY KEY (ID));`
     );
 
-    // Insert the data into the Participant table
-    const { name } = req.body;
+    // Insert the data into the tables
+    const {
+      name,
+      taskName,
+      taskValue,
+      taskSolved,
+      placementTime,
+      placementTotal,
+      countryName,
+      schoolName,
+      contestName,
+      contestYear,
+      contestTasksNumber,
+      resultGrade,
+      resultTry,
+      resultTime,
+      awardName,
+    } = req.body;
     await client.query("INSERT INTO Participant (Name) VALUES ($1)", [name]);
-
-    // Insert the data into the Task table
-    const { taskName, taskValue, taskSolved } = req.body;
     await client.query(
       "INSERT INTO Task (Name, Value, Solved) VALUES ($1, $2, $3)",
       [taskName, taskValue, taskSolved]
     );
-
-    // Insert the data into the Placement table
-    const { placementTime, placementTotal } = req.body;
     await client.query("INSERT INTO Placement (Time, Total) VALUES ($1, $2)", [
       placementTime,
       placementTotal,
     ]);
-
-    // Insert the data into the Country table
-    const { countryName } = req.body;
     await client.query("INSERT INTO Country (Name) VALUES ($1)", [countryName]);
-
-    // Insert the data into the SchoolName table
-    const { schoolName } = req.body;
     await client.query("INSERT INTO SchoolName (Name) VALUES ($1)", [
       schoolName,
     ]);
-
-    // Insert the data into the Contest table
-    const { contestName, contestYear } = req.body;
     await client.query("INSERT INTO Contest (Name, Year) VALUES ($1, $2)", [
       contestName,
       contestYear,
     ]);
-
-    // Insert the data into the ContestTasks table
-    const { contestTasksNumber } = req.body;
     await client.query("INSERT INTO ContestTasks (Number) VALUES ($1)", [
       contestTasksNumber,
     ]);
-
-    // Insert the data into the Result table
-    const { resultGrade, resultTry, resultTime } = req.body;
     await client.query(
       "INSERT INTO Result (Grade, Try, Time) VALUES ($1, $2, $3)",
       [resultGrade, resultTry, resultTime]
     );
-
-    // Insert the data into the Award table
-    const { awardName } = req.body;
     await client.query("INSERT INTO Award (Name) VALUES ($1)", [awardName]);
 
     res.status(200).json({ message: "Data inserted successfully" });
