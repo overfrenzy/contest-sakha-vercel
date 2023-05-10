@@ -100,7 +100,7 @@ export default function HomePage() {
         />
         <TextField
           label="Task Value"
-          type="number"
+          type="text"
           name="taskValue"
           value={formData.taskValue}
           onChange={handleChange}
@@ -120,7 +120,7 @@ export default function HomePage() {
         />
         <TextField
           label="Placement Time"
-          type="text"
+          type="number"
           name="placementTime"
           value={formData.placementTime}
           onChange={handleChange}
@@ -128,7 +128,7 @@ export default function HomePage() {
         />
         <TextField
           label="Placement Total"
-          type="text"
+          type="number"
           name="placementTotal"
           value={formData.placementTotal}
           onChange={handleChange}
@@ -168,7 +168,7 @@ export default function HomePage() {
         />
         <TextField
           label="Contest Tasks Number"
-          type="number"
+          type="text"
           name="contestTasksNumber"
           value={formData.contestTasksNumber}
           onChange={handleChange}
@@ -184,7 +184,7 @@ export default function HomePage() {
         />
         <TextField
           label="Result Try"
-          type="text"
+          type="number"
           name="resultTry"
           value={formData.resultTry}
           onChange={handleChange}
@@ -192,7 +192,7 @@ export default function HomePage() {
         />
         <TextField
           label="Result Time"
-          type="text"
+          type="number"
           name="resultTime"
           value={formData.resultTime}
           onChange={handleChange}
