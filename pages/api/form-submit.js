@@ -27,6 +27,54 @@ export default async function handler(req, res) {
     const { name } = req.body;
     await client.query("INSERT INTO Participant (Name) VALUES ($1)", [name]);
 
+    // Insert the data into the Task table
+    const { taskName, taskValue, taskSolved } = req.body;
+    await client.query(
+      "INSERT INTO Task (Name, Value, Solved) VALUES ($1, $2, $3)",
+      [taskName, taskValue, taskSolved]
+    );
+
+    // Insert the data into the Placement table
+    const { placementTime, placementTotal } = req.body;
+    await client.query("INSERT INTO Placement (Time, Total) VALUES ($1, $2)", [
+      placementTime,
+      placementTotal,
+    ]);
+
+    // Insert the data into the Country table
+    const { countryName } = req.body;
+    await client.query("INSERT INTO Country (Name) VALUES ($1)", [countryName]);
+
+    // Insert the data into the SchoolName table
+    const { schoolName } = req.body;
+    await client.query("INSERT INTO SchoolName (Name) VALUES ($1)", [
+      schoolName,
+    ]);
+
+    // Insert the data into the Contest table
+    const { contestName, contestYear } = req.body;
+    await client.query("INSERT INTO Contest (Name, Year) VALUES ($1, $2)", [
+      contestName,
+      contestYear,
+    ]);
+
+    // Insert the data into the ContestTasks table
+    const { contestTasksNumber } = req.body;
+    await client.query("INSERT INTO ContestTasks (Number) VALUES ($1)", [
+      contestTasksNumber,
+    ]);
+
+    // Insert the data into the Result table
+    const { resultGrade, resultTry, resultTime } = req.body;
+    await client.query(
+      "INSERT INTO Result (Grade, Try, Time) VALUES ($1, $2, $3)",
+      [resultGrade, resultTry, resultTime]
+    );
+
+    // Insert the data into the Award table
+    const { awardName } = req.body;
+    await client.query("INSERT INTO Award (Name) VALUES ($1)", [awardName]);
+
     res.status(200).json({ message: "Data inserted successfully" });
 
     await client.end();
