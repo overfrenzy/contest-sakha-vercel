@@ -1,4 +1,4 @@
-import DatabaseForm from "../pages/databaseForm";
+import DatabaseForm from "./databaseForm";
 
 export default function MyPage() {
   return (

@@ -1,35 +1,92 @@
-import { useRouter } from "next/router";
-import { Table, TableBody, TableRow, TableCell } from "@mui/material";
+import React, { useState, useEffect } from "react";
 
-export default function Home({ data }) {
-  const router = useRouter();
+interface Country {
+  name: string;
+}
+
+interface SchoolName {
+  name: string;
+}
+
+interface School {
+  schoolname: SchoolName;
+}
+
+interface Contest {
+  name: string;
+  year: number;
+}
+
+interface Participation {
+  contest: Contest;
+}
+
+interface Award {
+  name: string;
+}
+
+interface Participant {
+  id: number;
+  name: string;
+  country: Country;
+  school: School;
+  participation: Participation;
+  award: Award;
+}
+
+function DatabaseTest() {
+  const [participants, setParticipants] = useState<Participant[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/data")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format");
+        }
+        setParticipants(data);
+      })
+      .catch((error) => {
+        setError(error.message);
+      });
+  }, []);
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
-    <Table>
-      <TableBody>
-        {data.map((participant) => (
-          <TableRow key={participant.id}>
-            <TableCell>{participant.name}</TableCell>
-            <TableCell>{participant.Country}</TableCell>
-            <TableCell>{participant.School}</TableCell>
-            <TableCell>{participant.Participation}</TableCell>
-            <TableCell>{participant.Award}</TableCell>
-            {/* Add more fields here */}
-          </TableRow>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Country</th>
+          <th>School Name</th>
+          <th>Contest Name</th>
+          <th>Year</th>
+          <th>Award Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {participants.map((participant) => (
+          <tr key={participant.id}>
+            <td>{participant.name}</td>
+            <td>{participant.country?.name}</td>
+            <td>{participant.school?.schoolname?.name}</td>
+            <td>{participant.participation?.contest?.name}</td>
+            <td>{participant.participation?.contest?.year}</td>
+            <td>{participant.award?.name}</td>
+          </tr>
         ))}
-      </TableBody>
-    </Table>
+      </tbody>
+    </table>
   );
 }
 
-export async function getServerSideProps() {
-  const res = await fetch("/api/data"); //https://contest-sakha-vercel.vercel.app/api/data
-  const data = await res.json();
-
-  return {
-    props: {
-      data,
-    },
-  };
-}
-//retrieve JSON data from the response and show it
+export default DatabaseTest;

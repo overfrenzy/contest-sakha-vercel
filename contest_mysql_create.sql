@@ -1,108 +1,98 @@
-CREATE TABLE `Participant` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Name` VARCHAR(50) NOT NULL,
-	`Country` INT NOT NULL,
-	`School` INT NOT NULL,
-	`Participation` INT NOT NULL,
-	`Award` INT NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "Participant" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL,
+	"country" INT NOT NULL,
+	"school" INT NOT NULL,
+	"participation" INT NOT NULL,
+	"award" INT NOT NULL,
+	UNIQUE ("name", "country", "school", "participation")
 );
 
-CREATE TABLE `Task` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Name` VARCHAR(50) NOT NULL,
-	`Value` varchar(5) NOT NULL,
-	`Solved` BOOLEAN NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "Task" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL,
+	"value" VARCHAR(5) NOT NULL,
+	"solved" BOOLEAN NOT NULL
 );
 
-CREATE TABLE `Placement` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Participant` INT NOT NULL,
-	`Contest` INT NOT NULL,
-	`Award` INT NOT NULL,
-	`Time` INT NOT NULL,
-	`Total` INT NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "Placement" (
+	"id" SERIAL PRIMARY KEY,
+	"participant" INT NOT NULL,
+	"contest" INT NOT NULL,
+	"award" INT NOT NULL,
+	"time" INT NOT NULL,
+	"total" INT NOT NULL
 );
 
-CREATE TABLE `Country` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Name` varchar(50) NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "Country" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE `SchoolName` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Name` varchar(50) NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "SchoolName" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE `Contest` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Name` VARCHAR(50) NOT NULL,
-	`Year` INT NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "Contest" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL,
+	"year" INT NOT NULL
 );
 
-CREATE TABLE `ContestTasks` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`ContestId` INT NOT NULL,
-	`TaskId` INT NOT NULL,
-	`Number` varchar(3) NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "ContestTasks" (
+	"id" SERIAL PRIMARY KEY,
+	"contestId" INT NOT NULL,
+	"taskId" INT NOT NULL,
+	"number" VARCHAR(3) NOT NULL
 );
 
-CREATE TABLE `School` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`SchoolName` INT NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "School" (
+	"id" SERIAL PRIMARY KEY,
+	"schoolName_id" INT NOT NULL
 );
 
-CREATE TABLE `Participation` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Contest` INT NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "Participation" (
+	"id" SERIAL PRIMARY KEY,
+	"contest" INT NOT NULL
 );
 
-CREATE TABLE `Result` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Participant` INT NOT NULL,
-	`Task` INT NOT NULL,
-	`Grade` INT NOT NULL,
-	`Try` INT NOT NULL,
-	`Time` INT NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "Result" (
+	"id" SERIAL PRIMARY KEY,
+	"participant" INT NOT NULL,
+	"task" INT NOT NULL,
+	"grade" INT NOT NULL,
+	"try" INT NOT NULL,
+	"time" INT NOT NULL
 );
 
-CREATE TABLE `Award` (
-	`Id` INT NOT NULL AUTO_INCREMENT,
-	`Name` varchar(50) NOT NULL,
-	PRIMARY KEY (`Id`)
+CREATE TABLE "Award" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL
 );
 
-ALTER TABLE `Participant` ADD CONSTRAINT `Participant_fk0` FOREIGN KEY (`Country`) REFERENCES `Country`(`Id`);
+ALTER TABLE "Participant" ADD FOREIGN KEY ("country") REFERENCES "Country"("id");
 
-ALTER TABLE `Participant` ADD CONSTRAINT `Participant_fk1` FOREIGN KEY (`School`) REFERENCES `School`(`Id`);
+ALTER TABLE "Participant" ADD FOREIGN KEY ("school") REFERENCES "School"("id");
 
-ALTER TABLE `Participant` ADD CONSTRAINT `Participant_fk2` FOREIGN KEY (`Participation`) REFERENCES `Participation`(`Id`);
+ALTER TABLE "Participant" ADD FOREIGN KEY ("participation") REFERENCES "Participation"("id");
 
-ALTER TABLE `Participant` ADD CONSTRAINT `Participant_fk3` FOREIGN KEY (`Award`) REFERENCES `Award`(`Id`);
+ALTER TABLE "Participant" ADD FOREIGN KEY ("award") REFERENCES "Award"("id");
 
-ALTER TABLE `Placement` ADD CONSTRAINT `Placement_fk0` FOREIGN KEY (`Participant`) REFERENCES `Participant`(`Id`);
+ALTER TABLE "Placement" ADD FOREIGN KEY ("participant") REFERENCES "Participant"("id");
 
-ALTER TABLE `Placement` ADD CONSTRAINT `Placement_fk1` FOREIGN KEY (`Contest`) REFERENCES `Contest`(`Id`);
+ALTER TABLE "Placement" ADD FOREIGN KEY ("contest") REFERENCES "Contest"("id");
 
-ALTER TABLE `Placement` ADD CONSTRAINT `Placement_fk2` FOREIGN KEY (`Award`) REFERENCES `Award`(`Id`);
+ALTER TABLE "Placement" ADD FOREIGN KEY ("award") REFERENCES "Award"("id");
 
-ALTER TABLE `ContestTasks` ADD CONSTRAINT `ContestTasks_fk0` FOREIGN KEY (`ContestId`) REFERENCES `Contest`(`Id`);
+ALTER TABLE "ContestTasks" ADD FOREIGN KEY ("contestId") REFERENCES "Contest"("id");
 
-ALTER TABLE `ContestTasks` ADD CONSTRAINT `ContestTasks_fk1` FOREIGN KEY (`TaskId`) REFERENCES `Task`(`Id`);
+ALTER TABLE "ContestTasks" ADD FOREIGN KEY ("taskId") REFERENCES "Task"("id");
 
-ALTER TABLE `School` ADD CONSTRAINT `School_fk0` FOREIGN KEY (`SchoolName`) REFERENCES `SchoolName`(`Id`);
+ALTER TABLE "School" ADD FOREIGN KEY ("schoolName_id") REFERENCES "SchoolName"("id");
 
-ALTER TABLE `Participation` ADD CONSTRAINT `Participation_fk0` FOREIGN KEY (`Contest`) REFERENCES `Contest`(`Id`);
+ALTER TABLE "Participation" ADD FOREIGN KEY ("contest") REFERENCES "Contest"("id");
 
-ALTER TABLE `Result` ADD CONSTRAINT `Result_fk0` FOREIGN KEY (`Participant`) REFERENCES `Participant`(`Id`);
+ALTER TABLE "Result" ADD FOREIGN KEY ("participant") REFERENCES "Participant"("id");
 
-ALTER TABLE `Result` ADD CONSTRAINT `Result_fk1` FOREIGN KEY (`Task`) REFERENCES `ContestTasks`(`Id`);
+ALTER TABLE "Result" ADD FOREIGN KEY ("task") REFERENCES "ContestTasks"("id");
