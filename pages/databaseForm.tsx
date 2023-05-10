@@ -15,7 +15,7 @@ export default function HomePage() {
 
     try {
       // Submit the form data to the serverless function
-      const response = await fetch("/api/submit-form", {
+      const response = await fetch("/api/form-submit", {
         method: "POST",
         body: JSON.stringify(formData),
         headers: {
