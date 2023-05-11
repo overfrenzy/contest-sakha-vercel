@@ -55,6 +55,7 @@ export default function Home(props) {
                     sx={{
                       display: "flex",
                       alignItems: "center",
+                      height: "20px",
                     }}
                   >
                     {elem.place !== "" ? (
