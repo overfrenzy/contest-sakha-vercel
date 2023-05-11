@@ -1,15 +1,17 @@
 .table {
+	width: 100%;
 	border-collapse: collapse;
-}
-
-.table th {
-	border: 1px solid black;
-}
-
-.table td {
-	border: 1px solid black;
-}
-
-.value {
-	text-align: right;
-}
+  }
+  
+  .table th,
+  .table td {
+	border: 1px solid #ccc;
+	padding: 8px;
+	text-align: center;
+	white-space: nowrap;
+  }
+  
+  .value {
+	font-weight: bold;
+  }
+  

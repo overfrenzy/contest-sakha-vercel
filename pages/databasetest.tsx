@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import MUIDataTable from "mui-datatables";
 
 interface Country {
   name: string;
@@ -28,10 +29,11 @@ interface Award {
 interface Participant {
   id: number;
   name: string;
-  country: Country;
-  school: School;
-  participation: Participation;
-  award: Award;
+  country_name: string;
+  school_name: string;
+  contest_name: string;
+  contest_year: number;
+  award_name: string;
 }
 
 function DatabaseTest() {
@@ -57,35 +59,49 @@ function DatabaseTest() {
       });
   }, []);
 
+  const columns = [
+    {
+      name: "name",
+      label: "Name",
+    },
+    {
+      name: "country_name",
+      label: "Country",
+    },
+    {
+      name: "school_name",
+      label: "School Name",
+    },
+    {
+      name: "contest_name",
+      label: "Contest Name",
+    },
+    {
+      name: "contest_year",
+      label: "Year",
+    },
+    {
+      name: "award_name",
+      label: "Award Name",
+    },
+  ];
+
+  const options = {
+    selectableRows: "none",
+    responsive: "standard",
+  };
+
   if (error) {
     return <div>{error}</div>;
   }
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Country</th>
-          <th>School Name</th>
-          <th>Contest Name</th>
-          <th>Year</th>
-          <th>Award Name</th>
-        </tr>
-      </thead>
-      <tbody>
-        {participants.map((participant) => (
-          <tr key={participant.id}>
-            <td>{participant.name}</td>
-            <td>{participant.country?.name}</td>
-            <td>{participant.school?.schoolname?.name}</td>
-            <td>{participant.participation?.contest?.name}</td>
-            <td>{participant.participation?.contest?.year}</td>
-            <td>{participant.award?.name}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <MUIDataTable
+      title={"Participants"}
+      data={participants}
+      columns={columns}
+      options={options}
+    />
   );
 }
 

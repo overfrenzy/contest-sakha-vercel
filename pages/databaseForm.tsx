@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import { Grid } from '@mui/material';
+import { Grid } from "@mui/material";
+import styles from "./databaseForm.module.css";
+
+const formSubmitUrl = "/api/form-submit";
 
 export default function DatabaseForm() {
   const [name, setName] = useState("");
@@ -11,10 +14,23 @@ export default function DatabaseForm() {
   const [contestYear, setContestYear] = useState("");
   const [award, setAward] = useState("");
 
+  const participantInfo = useMemo(() => {
+    return {
+      name,
+      country,
+      school,
+      contest: {
+        name: contestName,
+        year: parseInt(contestYear),
+      },
+      award,
+    };
+  }, [name, country, school, contestName, contestYear, award]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const response = await fetch("/api/form-submit", {
+    const response = await fetch(formSubmitUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -102,5 +118,4 @@ export default function DatabaseForm() {
       </Grid>
     </form>
   );
-  
 }
