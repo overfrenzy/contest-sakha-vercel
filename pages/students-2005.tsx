@@ -1,9 +1,9 @@
 import fsPromises from "fs/promises";
 import path from "path";
-import Image from "next/image";
 import { Container, Grid, Paper, Typography, Box } from "@mui/material";
 import AppBar from "../components/AppBar2";
 import styles from "../styles/index.module.css";
+
 
 export default function Home(props) {
   const students = props.students;
@@ -19,22 +19,9 @@ export default function Home(props) {
           {students.map((elem, i) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={i.toString()}>
               <Paper elevation={3}>
-                <Box
-                  className={styles.img}
-                  sx={{
-                    position: "relative",
-                    width: "100%",
-                    height: 0,
-                    paddingTop: "100%",
-                  }}
-                >
-                  <Image
-                    src={elem.image}
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                  />
-                </Box>
+                <div className={styles["image-container"]}>
+                  <img src={elem.image} alt="" />
+                </div>
                 <Box padding={2}>
                   <Typography variant="subtitle1" component="h2">
                     {elem.participant_ru}
