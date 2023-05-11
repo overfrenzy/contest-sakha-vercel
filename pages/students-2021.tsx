@@ -12,7 +12,7 @@ export default function Home(props) {
     <div className={styles.content}>
       <AppBar />
       <Container sx={{ marginY: 3 }}>
-        <Typography variant="h1" component="h1">
+        <Typography variant="h2" component="h2">
           Участники
         </Typography>
         <Grid container spacing={2}>
