@@ -60,7 +60,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const driver = new Driver(database, authService, { endpoint });
+    const driver = new Driver(database, endpoint, authService, { logger: console });
     const timeout = 10000;
     if (!(await driver.ready(timeout))) {
       console.error(`Driver has not become ready in \${timeout}ms!`);
