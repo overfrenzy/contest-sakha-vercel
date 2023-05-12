@@ -1,120 +1,105 @@
-import { useState, useMemo } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import { Grid } from "@mui/material";
-
-const formSubmitUrl = "/api/form-submit";
+import React, { useState } from "react";
+import {
+  Button,
+  Container,
+  TextField,
+  FormControl,
+  InputLabel,
+  Input,
+} from "@mui/material";
 
 export default function DatabaseForm() {
   const [name, setName] = useState("");
   const [country, setCountry] = useState("");
   const [school, setSchool] = useState("");
-  const [contestName, setContestName] = useState("");
-  const [contestYear, setContestYear] = useState("");
+  const [contest, setContest] = useState({ name: "", year: "", tasks: [] });
   const [award, setAward] = useState("");
 
-  const participantInfo = useMemo(() => {
-    return {
-      name,
-      country,
-      school,
-      contest: {
-        name: contestName,
-        year: parseInt(contestYear),
-      },
-      award,
-    };
-  }, [name, country, school, contestName, contestYear, award]);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    const response = await fetch(formSubmitUrl, {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const response = await fetch("/api/form-submit", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name,
-        country,
-        school,
-        contest: {
-          name: contestName,
-          year: parseInt(contestYear),
-        },
-        award,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, country, school, contest, award }),
     });
 
-    if (response.ok) {
-      alert("Participant added successfully");
-    } else {
-      alert("Something went wrong");
+    const result = await response.json();
+    console.log(result);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event: ProgressEvent<FileReader>) => {
+        if (event.target && event.target.result) {
+          const tasks = JSON.parse(event.target.result as string);
+          setContest({ ...contest, tasks });
+        }
+      };
+      reader.readAsText(file);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Name"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            fullWidth
+    <Container maxWidth="sm">
+      <form onSubmit={handleSubmit}>
+        <TextField
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Country"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="School"
+          value={school}
+          onChange={(e) => setSchool(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Contest Name"
+          value={contest.name}
+          onChange={(e) => setContest({ ...contest, name: e.target.value })}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Contest Year"
+          type="number"
+          value={contest.year}
+          onChange={(e) => setContest({ ...contest, year: e.target.value })}
+          fullWidth
+          margin="normal"
+        />
+        <FormControl fullWidth margin="normal">
+          <InputLabel htmlFor="contestTasks">Contest Tasks (JSON)</InputLabel>
+          <Input
+            id="contestTasks"
+            type="file"
+            onChange={handleFileChange}
+            inputProps={{ accept: "application/json" }}
           />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Country"
-            value={country}
-            onChange={(event) => setCountry(event.target.value)}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="School"
-            value={school}
-            onChange={(event) => setSchool(event.target.value)}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Contest Name"
-            value={contestName}
-            onChange={(event) => setContestName(event.target.value)}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Contest Year"
-            type="number"
-            value={contestYear}
-            onChange={(event) => setContestYear(event.target.value)}
-            inputProps={{
-              step: 1,
-              pattern: "\\d*",
-            }}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            label="Award"
-            value={award}
-            onChange={(event) => setAward(event.target.value)}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" type="submit" fullWidth>
-            Submit
-          </Button>
-        </Grid>
-      </Grid>
-    </form>
+        </FormControl>
+        <TextField
+          label="Award"
+          value={award}
+          onChange={(e) => setAward(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </form>
+    </Container>
   );
 }

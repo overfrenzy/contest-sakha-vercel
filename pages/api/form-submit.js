@@ -70,50 +70,72 @@ export default async function handler(req, res) {
     const tableClient = new TableClient(driver);
     await initializeTables(tableClient);
 
-    const preparedQuery = `
-  UPSERT INTO Country (name) VALUES (?);
-  UPSERT INTO Schoolname (name) VALUES (?);
-  UPSERT INTO Contest (name, year, tasks) VALUES (?, ?, ?);
-  UPSERT INTO Award (name) VALUES (?);
-
-  DECLARE $country_id AS Int32;
-  SELECT id INTO $country_id FROM Country WHERE name = ?;
-
-  DECLARE $schoolname_id AS Int32;
-  SELECT id INTO $schoolname_id FROM Schoolname WHERE name = ?;
-
-  UPSERT INTO School (schoolName_id) VALUES (?);
-  DECLARE $school_id AS Int32;
-  SELECT id INTO $school_id FROM School WHERE schoolName_id = ?;
-
-  DECLARE $contest_id AS Int32;
-  SELECT id INTO $contest_id FROM Contest WHERE name = ? AND year = ?;
-
-  UPSERT INTO Participation (contest) VALUES (?);
-  DECLARE $participation_id AS Int32;
-  SELECT id INTO $participation_id FROM Participation WHERE contest = ?;
-
-  UPSERT INTO Participant (Name, Country, School, Participation, Award)
-  VALUES (?, ?, ?, ?, ?);
-`;
-
     await tableClient.withSession(async (session) => {
-      const preparedStatement = await session.prepareQuery(preparedQuery);
       await session.transaction(async (tx) => {
-        await tx.executeQuery(preparedStatement, [
+        // Insert data into Country, Schoolname, Contest, and Award tables
+        const insertDataQuery = `
+          UPSERT INTO Country (name) VALUES (?);
+          UPSERT INTO Schoolname (name) VALUES (?);
+          UPSERT INTO Contest (name, year, tasks) VALUES (?, ?, ?);
+          UPSERT INTO Award (name) VALUES (?);
+        `;
+        const insertDataStatement = await session.prepareQuery(insertDataQuery);
+        await tx.executeQuery(insertDataStatement, [
           country,
           school,
           contest.name,
           contest.year,
           JSON.stringify(contest.tasks),
           award,
+        ]);
+
+        // Retrieve IDs
+        const getIdQuery = `
+          SELECT id FROM Country WHERE name = ?;
+          SELECT id FROM Schoolname WHERE name = ?;
+          SELECT id FROM Contest WHERE name = ? AND year = ?;
+          SELECT id FROM Award WHERE name = ?;
+        `;
+        const getIdStatement = await session.prepareQuery(getIdQuery);
+        const [countryIdResult, schoolnameIdResult, contestIdResult, awardIdResult] = await tx.executeQuery(getIdStatement, [
           country,
-          school,
           school,
           contest.name,
           contest.year,
-          contest.year,
+          award,
         ]);
+
+        const country_id = countryIdResult[0].id;
+        const schoolname_id = schoolnameIdResult[0].id;
+        const contest_id = contestIdResult[0].id;
+        const award_id = awardIdResult[0].id;
+
+        // Insert data into School and Participation tables
+        const insertSchoolAndParticipationQuery = `
+          UPSERT INTO School (schoolName_id) VALUES (?);
+          UPSERT INTO Participation (contest) VALUES (?);
+        `;
+        const insertSchoolAndParticipationStatement = await session.prepareQuery(insertSchoolAndParticipationQuery);
+        await tx.executeQuery(insertSchoolAndParticipationStatement, [schoolname_id, contest_id]);
+
+        // Retrieve School and Participation IDs
+        const getSchoolAndParticipationIdQuery = `
+          SELECT id FROM School WHERE schoolName_id = ?;
+          SELECT id FROM Participation WHERE contest = ?;
+        `;
+        const getSchoolAndParticipationIdStatement = await session.prepareQuery(getSchoolAndParticipationIdQuery);
+        const [schoolIdResult, participationIdResult] = await tx.executeQuery(getSchoolAndParticipationIdStatement, [schoolname_id, contest_id]);
+
+        const school_id = schoolIdResult[0].id;
+        const participation_id = participationIdResult[0].id;
+
+        // Insert data into Participant table
+        const insertParticipantQuery = `
+          UPSERT INTO Participant (Name, Country, School, Participation, Award)
+          VALUES (?, ?, ?, ?, ?);
+        `;
+        const insertParticipantStatement = await session.prepareQuery(insertParticipantQuery);
+        await tx.executeQuery(insertParticipantStatement, [name, country_id, school_id, participation_id, award_id]);
       });
     });
 
