@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { Grid } from "@mui/material";
-import styles from "./databaseForm.module.css";
 
 const formSubmitUrl = "/api/form-submit";
 

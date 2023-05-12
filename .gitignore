@@ -1,4 +1,5 @@
 .next/
 node_modules/
 out/
-.env.local
+.env
+authorized_key.json
