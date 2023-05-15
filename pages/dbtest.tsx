@@ -1,38 +1,28 @@
-import { GetServerSideProps } from "next";
-import { Pool } from "pg";
+import React from 'react';
+import fetch from 'isomorphic-unfetch';
 
-export default function Db({ isConnected }) {
+const CheckYdbConnection = ({ isConnected, text }) => {
   return (
     <div>
-      <h1>Database Connection Status</h1>
       {isConnected ? (
-        <p>The connection to the database is successful.</p>
+        <p>Connected to YDB: {text}</p>
       ) : (
-        <p>The connection to the database has failed.</p>
+        <p>Not connected to YDB: {text}</p>
       )}
     </div>
   );
+};
+
+export async function getServerSideProps() {
+  const response = await fetch('https://functions.yandexcloud.net/d4eqsnhn46kj7oel7t2k');
+  const text = await response.text();
+
+  return {
+    props: {
+      isConnected: response.status === 200,
+      text,
+    },
+  };
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    max: 40, // Maximum number of connections in the pool
-    keepAlive: {
-      interval: 150000, // Interval to periodically check if connections are valid
-    },
-  });
-
-  try {
-    const client = await pool.connect();
-    client.release();
-    return { props: { isConnected: true } };
-  } catch (error) {
-    return { props: { isConnected: false } };
-  } finally {
-    await pool.end();
-  }
-};
+export default CheckYdbConnection;

@@ -1,0 +1,9 @@
+{
+  "name": "my-yandex-functions",
+  "version": "1.0.0",
+  "dependencies": {
+    "@yandex-cloud/nodejs-sdk": "^2.4.3",
+    "yandex-cloud-functions-router": "^2.2.0",
+    "ydb-sdk": "^4.6.0"
+  }
+}
