@@ -1,4 +1,6 @@
 const { Driver, getCredentialsFromEnv, getLogger } = require('ydb-sdk');
+const { router } = require('yandex-cloud-functions-router');
+
 const logger = getLogger({ level: 'debug' });
 const endpoint = 'grpcs://ydb.serverless.yandexcloud.net:2135';
 const database = '/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714';
@@ -24,4 +26,20 @@ async function testYdbConnection() {
   }
 }
 
-exports.testYdbConnection = testYdbConnection;
+exports.handler = router({
+  http: [
+    {
+      httpMethod: ['GET'],
+      handler: async (event, context) => {
+        // Handle HTTP request
+        const isConnected = await testYdbConnection();
+        const statusCode = isConnected ? 200 : 500;
+        const body = isConnected ? 'Connected to YDB' : 'Not connected to YDB';
+        return {
+          statusCode,
+          body,
+        };
+      },
+    },
+  ],
+});

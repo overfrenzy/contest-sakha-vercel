@@ -5,34 +5,44 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { useMediaQuery, useTheme } from '@mui/material';
 
 export default function AAppBar() {
-	return (
-		<Box sx={{ flexGrow: 1 }}>
-			<AppBar position="static" sx={{ bgcolor: "purple" }}>
-				<Toolbar>
-					<IconButton
-						size="large"
-						edge="start"
-						color="inherit"
-						aria-label="open drawer"
-					>
-					</IconButton>
-					<Typography
-						variant="h6"
-						noWrap
-						component="div"
-						sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
-					>
-						<Button href="/" variant="contained" color="primary">
-							Олимпиады
-						</Button>
-					</Typography>
-					<Button href="/students" variant="contained" color="secondary">
-						Участники
-					</Button>
-				</Toolbar>
-			</AppBar>
-		</Box>
-	);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  return (
+    <Box sx={{ flexGrow: 1 }}>
+      <AppBar position="static" sx={{ bgcolor: "purple" }}>
+        <Toolbar>
+          {isMobile ? (
+            <>
+              <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+              ></IconButton>
+            </>
+          ) : (
+            <>
+              <Typography
+                variant="h6"
+                noWrap
+                component="div"
+                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+              >
+                <Button href="/" variant="contained" color="primary">
+                  Олимпиады
+                </Button>
+              </Typography>
+              <Button href="/students" variant="contained" color="secondary">
+                Участники
+              </Button>
+            </>
+          )}
+        </Toolbar>
+      </AppBar>
+    </Box>
+  );
 }
