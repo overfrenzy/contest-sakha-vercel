@@ -17,7 +17,7 @@ export default function DatabaseForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch("/api/form-submit", {
+    const response = await fetch('https://functions.yandexcloud.net/d4evp65g6njl3eb4midb', {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, country, school, contest, award }),
