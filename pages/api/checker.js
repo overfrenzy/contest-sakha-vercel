@@ -29,7 +29,7 @@ async function handleAPIRequest(request) {
   form.append('file', request);
   
   // Extract files from the database
-  const archiveName = 'granopodus-26%24windows.zip';
+  const archiveName = 'granopodus-26%24windows.zip'; //how to dynamically call for archives? hardcode it into a page tasks when sending a post request?
   const extractedFiles = await extractFilesFromDatabase(archiveName);
   
   // Get input and answer files from the extracted files
@@ -150,5 +150,11 @@ async function runTestCase(testCasePath, input, programOutput, answers) {
 }
 
 const handler = nc().post(handleRequest);
+console.log(handler);
+
 
 export default handler;
+
+//Vercel doesn't support the child_process.spawn() method for running executables like g++, how to compile a programm is a question
+//use third party service? Compiler Explorer, Judge0
+//break down the code into smaller functions and use Vercel's serverless functions to handle specific tasks as Vercel uses serverless functions, which are individual, stateless, and short-lived
