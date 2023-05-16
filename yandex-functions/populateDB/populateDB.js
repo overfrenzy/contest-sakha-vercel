@@ -1,54 +1,61 @@
-const { Driver, getCredentialsFromEnv, getLogger } = require('ydb-sdk');
-const express = require('express');
-const serverlessHttp = require('serverless-http');
+const { Driver, getCredentialsFromEnv, getLogger } = require("ydb-sdk");
+const express = require("express");
+const serverlessHttp = require("serverless-http");
 
-const logger = getLogger({ level: 'debug' });
-const endpoint = 'grpcs://ydb.serverless.yandexcloud.net:2135';
-const database = '/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714';
+const logger = getLogger({ level: "debug" });
+const endpoint = "grpcs://ydb.serverless.yandexcloud.net:2135";
+const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
 const authService = getCredentialsFromEnv();
 
 async function initializeTables(tableClient) {
   const createTablesQuery = `
-    CREATE TABLE IF NOT EXISTS Country (
-      id SERIAL PRIMARY KEY,
-      name Utf8 NOT NULL
-    );
+  CREATE TABLE IF NOT EXISTS Country (
+    id Uint64,
+    name Utf8 NOT NULL,
+    PRIMARY KEY (id)
+);
 
-    CREATE TABLE IF NOT EXISTS Schoolname (
-      id SERIAL PRIMARY KEY,
-      name Utf8 NOT NULL
-    );
+CREATE TABLE IF NOT EXISTS Schoolname (
+    id Uint64,
+    name Utf8 NOT NULL,
+    PRIMARY KEY (id)
+);
 
-    CREATE TABLE IF NOT EXISTS School (
-      id SERIAL PRIMARY KEY,
-      schoolName_id Int32 REFERENCES Schoolname(id)
-    );
+CREATE TABLE IF NOT EXISTS School (
+    id Uint64,
+    schoolName_id Uint64,
+    PRIMARY KEY (id)
+);
 
-    CREATE TABLE IF NOT EXISTS Contest (
-      id SERIAL PRIMARY KEY,
-      name Utf8 NOT NULL,
-      year Int32 NOT NULL,
-      tasks Json
-    );
+CREATE TABLE IF NOT EXISTS Contest (
+    id Uint64,
+    name Utf8 NOT NULL,
+    year Uint32 NOT NULL,
+    tasks Json,
+    PRIMARY KEY (id)
+);
 
-    CREATE TABLE IF NOT EXISTS Participation (
-      id SERIAL PRIMARY KEY,
-      contest Int32 REFERENCES Contest(id)
-    );
+CREATE TABLE IF NOT EXISTS Participation (
+    id Uint64,
+    contest Uint64,
+    PRIMARY KEY (id)
+);
 
-    CREATE TABLE IF NOT EXISTS Award (
-      id SERIAL PRIMARY KEY,
-      name Utf8 NOT NULL
-    );
+CREATE TABLE IF NOT EXISTS Award (
+    id Uint64,
+    name Utf8 NOT NULL,
+    PRIMARY KEY (id)
+);
 
-    CREATE TABLE IF NOT EXISTS Participant (
-      id SERIAL PRIMARY KEY,
-      Name Utf8 NOT NULL,
-      Country Int32 REFERENCES Country(id),
-      School Int32 REFERENCES School(id),
-      Participation Int32 REFERENCES Participation(id),
-      Award Int32 REFERENCES Award(id)
-    );
+CREATE TABLE IF NOT EXISTS Participant (
+    id Uint64,
+    Name Utf8 NOT NULL,
+    Country Uint64,
+    School Uint64,
+    Participation Uint64,
+    Award Uint64,
+    PRIMARY KEY (id)
+);
   `;
 
   await tableClient.withSession(async (session) => {
@@ -100,7 +107,12 @@ const formSubmitHandler = async function (req, res) {
           SELECT id FROM Award WHERE name = ?;
         `;
         const getIdStatement = await session.prepareQuery(getIdQuery);
-        const [countryIdResult, schoolnameIdResult, contestIdResult, awardIdResult] = await tx.executeQuery(getIdStatement, [
+        const [
+          countryIdResult,
+          schoolnameIdResult,
+          contestIdResult,
+          awardIdResult,
+        ] = await tx.executeQuery(getIdStatement, [
           country,
           school,
           contest.name,
@@ -118,16 +130,25 @@ const formSubmitHandler = async function (req, res) {
           UPSERT INTO School (schoolName_id) VALUES (?);
           UPSERT INTO Participation (contest) VALUES (?);
         `;
-        const insertSchoolAndParticipationStatement = await session.prepareQuery(insertSchoolAndParticipationQuery);
-        await tx.executeQuery(insertSchoolAndParticipationStatement, [schoolname_id, contest_id]);
+        const insertSchoolAndParticipationStatement =
+          await session.prepareQuery(insertSchoolAndParticipationQuery);
+        await tx.executeQuery(insertSchoolAndParticipationStatement, [
+          schoolname_id,
+          contest_id,
+        ]);
 
         // Retrieve School and Participation IDs
         const getSchoolAndParticipationIdQuery = `
           SELECT id FROM School WHERE schoolName_id = ?;
           SELECT id FROM Participation WHERE contest = ?;
         `;
-        const getSchoolAndParticipationIdStatement = await session.prepareQuery(getSchoolAndParticipationIdQuery);
-        const [schoolIdResult, participationIdResult] = await tx.executeQuery(getSchoolAndParticipationIdStatement, [schoolname_id, contest_id]);
+        const getSchoolAndParticipationIdStatement = await session.prepareQuery(
+          getSchoolAndParticipationIdQuery
+        );
+        const [schoolIdResult, participationIdResult] = await tx.executeQuery(
+          getSchoolAndParticipationIdStatement,
+          [schoolname_id, contest_id]
+        );
 
         const school_id = schoolIdResult[0].id;
         const participation_id = participationIdResult[0].id;
@@ -137,8 +158,16 @@ const formSubmitHandler = async function (req, res) {
           UPSERT INTO Participant (Name, Country, School, Participation, Award)
           VALUES (?, ?, ?, ?, ?);
         `;
-        const insertParticipantStatement = await session.prepareQuery(insertParticipantQuery);
-        await tx.executeQuery(insertParticipantStatement, [name, country_id, school_id, participation_id, award_id]);
+        const insertParticipantStatement = await session.prepareQuery(
+          insertParticipantQuery
+        );
+        await tx.executeQuery(insertParticipantStatement, [
+          name,
+          country_id,
+          school_id,
+          participation_id,
+          award_id,
+        ]);
       });
     });
 
@@ -147,17 +176,20 @@ const formSubmitHandler = async function (req, res) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
 const app = express();
 app.use(express.json());
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return res.status(200).end();
   }
 
