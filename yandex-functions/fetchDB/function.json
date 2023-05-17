@@ -1,5 +1,5 @@
 {
-    "name": "populate-db",
+    "name": "fetch-db",
     "runtime": "nodejs14",
     "entrypoint": "handler.http",
     "memory": 128,
