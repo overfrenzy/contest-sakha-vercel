@@ -86,13 +86,33 @@ async function insertAward(name) {
   return awardId;
 }
 
-async function run() {
-  if (!await driver.ready(10000)) {
-    logger.fatal(`Driver has not become ready in 10 seconds!`);
-    process.exit(1);
+
+exports.handler = async (event, context) => {
+  await driver.ready;
+
+  if (!event.body || event.body.trim() === '') {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: 'Empty request body' }),
+    };
   }
 
-  await insertParticipant('John Doe', 'USA', 'Example School', 'Math Contest 2023', 'Gold Medal');
-}
+  let body;
+  try {
+    body = JSON.parse(event.body);
+  } catch (error) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: 'Invalid JSON format' }),
+    };
+  }
 
-run();
+  const { name, countryName, schoolName, contestName, awardName } = body;
+
+  await insertParticipant(name, countryName, schoolName, contestName, awardName);
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ message: 'Participant added successfully' }),
+  };
+};

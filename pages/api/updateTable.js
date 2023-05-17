@@ -4,9 +4,7 @@ const handler = async (req, res) => {
     if (req.method === 'POST') {
       const { award, country, school, participation, contest, schoolname } = req.body;
 
-    // Call your Yandex Cloud Function to update the tables
-    // Replace the URL with your cloud function's URL
-    const response = await fetch('https://your-cloud-function-url', {
+    const response = await fetch('https://functions.yandexcloud.net/d4eqnrip9actlted2np7', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ award, country, school, participation, contest, schoolname }),

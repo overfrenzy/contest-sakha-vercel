@@ -42,7 +42,6 @@ async function fetchData() {
     return { countries, schools, participations, awards, contests, schoolNames };
   }
   
-
 exports.handler = async (event, context) => {
   try {
     const data = await fetchData();
