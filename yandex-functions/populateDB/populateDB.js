@@ -88,6 +88,18 @@ async function insertAward(name) {
 
 
 exports.handler = async (event, context) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
+      body: '',
+    };
+  }
+
   await driver.ready;
 
   if (!event.body || event.body.trim() === '') {
@@ -116,3 +128,7 @@ exports.handler = async (event, context) => {
     body: JSON.stringify({ message: 'Participant added successfully' }),
   };
 };
+
+
+//the error says that there is an issue with the insertCountry: missing key column in input: id for table: /ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714/country.
+//it seems YDB does not have an option of id being auto increment so you have to add indexes everytime
