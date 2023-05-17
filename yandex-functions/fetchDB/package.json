@@ -1,0 +1,8 @@
+{
+  "name": "fetch-db",
+  "version": "1.0.0",
+  "main": "fetchDB.js",
+  "dependencies": {
+    "ydb-sdk": "^4.6.0"
+  }
+}
