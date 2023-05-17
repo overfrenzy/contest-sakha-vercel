@@ -1,4 +1,4 @@
-import DatabaseForm from "./databaseForm";
+import DatabaseForm from "./dbForm";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";

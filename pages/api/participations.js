@@ -1,6 +1,6 @@
 import fetch from 'node-fetch';
 
-export default async (req, res) => {
+const fetchParticipations = async (req, res) => {
   const data = await fetch('https://functions.yandexcloud.net/d4e8s3vflh5b7h6dgsdn', {
     headers: { 'Content-Type': 'application/json' },
   });
@@ -10,3 +10,5 @@ export default async (req, res) => {
 
   res.status(200).json(participations);
 };
+
+export default fetchParticipations;
