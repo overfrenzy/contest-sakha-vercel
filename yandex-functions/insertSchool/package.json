@@ -1,0 +1,9 @@
+{
+  "name": "insert-school-name",
+  "version": "1.0.0",
+  "main": "insertSchoolName.js",
+  "dependencies": {
+    "@yandex-cloud/nodejs-sdk": "^2.4.3",
+    "ydb-sdk": "^4.6.0"
+  }
+}

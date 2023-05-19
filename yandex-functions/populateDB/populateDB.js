@@ -21,10 +21,11 @@ async function insertParticipant(
   const schoolId = await insertSchool(schoolnameId);
   const contestId = await insertContest(contestName, year, tasks);
   const awardId = await insertAward(awardName);
+  const participationId = await insertParticipation(contestId);
 
-  const query = `
+   const query = `
   INSERT INTO participant (participant_id, name, country_id, school_id, participation_id, award_id)
-  VALUES ("${participantId}", "${name}", "${countryId}", "${schoolId}", "${contestId}", "${awardId}")
+  VALUES ("${participantId}", "${name}", "${countryId}", "${schoolId}", "${participationId}", "${awardId}")
 `;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
@@ -69,14 +70,27 @@ async function insertSchool(schoolnameId) {
 
 async function insertContest(name, year, tasks) {
   const contestId = uuidv4();
+  const tasksJson = JSON.stringify(tasks);
   const query = `
     INSERT INTO contest (contest_id, name, year, tasks)
-    VALUES ("${contestId}", "${name}", ${year}, '${tasks}')
+    VALUES ("${contestId}", "${name}", ${year}, '${tasksJson}')
   `;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
   });
   return contestId;
+}
+
+async function insertParticipation(contestId) {
+  const participationId = uuidv4();
+  const query = `
+    INSERT INTO participation (participation_id, contest_id)
+    VALUES ("${participationId}", "${contestId}")
+  `;
+  await driver.tableClient.withSession(async (session) => {
+    await session.executeQuery(query);
+  });
+  return participationId;
 }
 
 async function insertAward(name) {
@@ -132,7 +146,7 @@ exports.handler = async (event, context) => {
     contestName,
     awardName,
     parseInt(year, 10),
-    JSON.stringify(tasks)
+    tasks
   );
 
   return {
