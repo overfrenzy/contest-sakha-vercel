@@ -11,18 +11,21 @@ async function insertParticipant(
   countryName,
   schoolName,
   contestName,
-  awardName
+  awardName,
+  year,
+  tasks
 ) {
+  const participantId = uuidv4();
   const countryId = await insertCountry(countryName);
   const schoolnameId = await insertSchoolname(schoolName);
   const schoolId = await insertSchool(schoolnameId);
-  const contestId = await insertContest(contestName);
+  const contestId = await insertContest(contestName, year, tasks);
   const awardId = await insertAward(awardName);
 
   const query = `
-    INSERT INTO participant (name, country_id, school_id, participation_id, award_id)
-    VALUES ("${name}", "${countryId}", "${schoolId}", "${contestId}", "${awardId}")
-  `;
+  INSERT INTO participant (participant_id, name, country_id, school_id, participation_id, award_id)
+  VALUES ("${participantId}", "${name}", "${countryId}", "${schoolId}", "${contestId}", "${awardId}")
+`;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
   });
@@ -65,10 +68,10 @@ async function insertSchool(schoolnameId) {
 }
 
 async function insertContest(name, year, tasks) {
-  const contestId = uuidv4(); //now the error is here, something about mismatch of types, look into it
+  const contestId = uuidv4();
   const query = `
     INSERT INTO contest (contest_id, name, year, tasks)
-    VALUES ("${contestId}", "${name}", "${year}", '${tasks}')
+    VALUES ("${contestId}", "${name}", ${year}, '${tasks}')
   `;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
@@ -120,14 +123,16 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const { name, countryName, schoolName, contestName, awardName } = body;
+  const { name, countryName, schoolName, contestName, awardName, year, tasks } = body;
 
   await insertParticipant(
     name,
     countryName,
     schoolName,
     contestName,
-    awardName
+    awardName,
+    parseInt(year, 10),
+    JSON.stringify(tasks)
   );
 
   return {

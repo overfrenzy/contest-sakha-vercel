@@ -1,8 +1,0 @@
-{
-    "name": "populate-db",
-    "runtime": "nodejs14",
-    "entrypoint": "handler.http",
-    "memory": 128,
-    "execution_timeout": "3s"
-  }
-  
