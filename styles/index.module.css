@@ -1,37 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
 .content {
-	/*width: 1200px;*/
-	margin-left: auto;
-	margin-right: auto;
+  font-family: 'Roboto', sans-serif; /* custom goole font */
+  margin: 0 auto;
+}
+
+.title {
+  text-align: left;
+  padding: 0.5rem;
 }
 
 .img {
-	width: 100%;
-	height: 15rem;
+  width: 100%;
+  height: 15rem;
 }
 
 .content2 {
-	display: flex;
-	flex-wrap: wrap;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .button {
-	display: flex;
+  display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
 .image-container {
-    position: relative;
-    width: 100%;
-    height: 0;
-    padding-top: 100%;
-  }
-  
-  .image-container img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-top: 100%;
+}
+
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

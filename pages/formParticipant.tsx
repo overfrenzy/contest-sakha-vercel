@@ -30,14 +30,14 @@ function InsertParticipant() {
   }, []);
 
   async function fetchData() {
-    const response = await fetch(
-      "https://functions.yandexcloud.net/d4e8s3vflh5b7h6dgsdn" //fetch-db function
-    );
+    const response = await fetch("https://functions.yandexcloud.net/d4ea86n90q4jthin60pn", {
+      method: "GET",
+    });
     const data = await response.json();
     setData(data);
     setLoading(false);
   }
-
+  
   async function submitForm() {
     const participant = {
       school_id: selectedSchool,

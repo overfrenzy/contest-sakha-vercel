@@ -1,0 +1,11 @@
+{
+  "name": "db-fetch",
+  "version": "1.0.0",
+  "main": "fetchDB.js",
+  "dependencies": {
+    "@yandex-cloud/nodejs-sdk": "^2.4.3",
+    "express": "^4.18.2",
+    "serverless-http": "^3.2.0",
+    "ydb-sdk": "^4.6.0"
+  }
+}

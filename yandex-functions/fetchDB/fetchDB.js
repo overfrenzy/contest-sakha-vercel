@@ -11,7 +11,7 @@ async function fetchData() {
       process.exit(1);
     }
   
-    let countries, schools, participations, awards, contests, schoolNames;
+    let countries, schools, participations, awards, contests, schoolnames;
     
     await driver.tableClient.withSession(async (session) => {
       countries = await session.executeQuery(`
@@ -34,12 +34,12 @@ async function fetchData() {
         SELECT * FROM contest;
       `).then(result => result.rows);
   
-      schoolNames = await session.executeQuery(`
+      schoolnames = await session.executeQuery(`
         SELECT * FROM schoolname;
       `).then(result => result.rows);
     });
   
-    return { countries, schools, participations, awards, contests, schoolNames };
+    return { countries, schools, participations, awards, contests, schoolnames };
   }
   
 exports.handler = async (event, context) => {
