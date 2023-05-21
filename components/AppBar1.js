@@ -8,11 +8,23 @@ import Button from '@mui/material/Button';
 import { useMediaQuery, useTheme } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
+import MenuIcon from '@mui/icons-material/Menu';
+import Link from 'next/link';
 
 export default function AAppBar() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -25,7 +37,32 @@ export default function AAppBar() {
                 edge="start"
                 color="inherit"
                 aria-label="open drawer"
-              ></IconButton>
+                onClick={handleMenu}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose} component={Link} href="/">
+                  Олимпиады
+                </MenuItem>
+                <MenuItem onClick={handleClose} component={Link} href="/students">
+                  Участники
+                </MenuItem>
+              </Menu>
             </>
           ) : (
             <>
