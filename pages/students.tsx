@@ -21,7 +21,7 @@ export default function HomePage() {
             </h1>
           </Grid>
           <Grid item xs={12}>
-            <ButtonGroup
+          <ButtonGroup
               variant="contained"
               color="secondary"
               size={isSmallScreen ? "small" : "medium"}
@@ -29,6 +29,7 @@ export default function HomePage() {
                 flexWrap: isSmallScreen ? "wrap" : "nowrap",
                 "& .MuiButton-root": {
                   minWidth: isSmallScreen ? "100%" : "auto",
+                  marginBottom: isSmallScreen ? "8px" : "0",
                 },
               }}
             >
