@@ -19,10 +19,16 @@ export default function HomePage() {
             <h1>Олимпиады по программированию Республики Саха (Якутия)</h1>
           </Grid>
           <Grid item xs={12}>
-            <ButtonGroup
+          <ButtonGroup
               variant="contained"
               color="primary"
               size={isSmallScreen ? "small" : "medium"}
+              sx={{
+                flexWrap: isSmallScreen ? "wrap" : "nowrap",
+                "& .MuiButton-root": {
+                  minWidth: isSmallScreen ? "100%" : "auto",
+                },
+              }}
             >
               <Button href="/tuy-2005">Туймаада-2005</Button>
               <Button href="/tuy-2016">Туймаада-2016</Button>

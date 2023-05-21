@@ -16,13 +16,21 @@ export default function HomePage() {
       <Container className={styles.content2}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <h1>Олимпиады по программированию Республики Саха (Якутия)</h1>
+            <h1>
+              Участники олимпиад по программированию Республики Саха (Якутия)
+            </h1>
           </Grid>
           <Grid item xs={12}>
             <ButtonGroup
               variant="contained"
               color="secondary"
               size={isSmallScreen ? "small" : "medium"}
+              sx={{
+                flexWrap: isSmallScreen ? "wrap" : "nowrap",
+                "& .MuiButton-root": {
+                  minWidth: isSmallScreen ? "100%" : "auto",
+                },
+              }}
             >
               <Button href="/students-2005">Участники-2005</Button>
               <Button href="/students-2016">Участники-2016</Button>
