@@ -5,7 +5,7 @@ export default function MyApp({ Component, pageProps }) {
     <>
       <Head>
         <title>Олимпиды по программированию РС(Я)</title>
-        <link rel="icon" href="/favicon16.png" />
+        <link rel="icon" href="/favicon.ico" />
       </Head>
       <Component {...pageProps} />
     </>

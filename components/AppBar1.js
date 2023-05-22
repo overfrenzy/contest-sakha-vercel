@@ -1,19 +1,19 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import { useMediaQuery, useTheme } from '@mui/material';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import MenuIcon from '@mui/icons-material/Menu';
-import Link from 'next/link';
+import * as React from "react";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import { useMediaQuery, useTheme } from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MenuIcon from "@mui/icons-material/Menu";
+import Link from "next/link";
 
 export default function AAppBar() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -27,7 +27,7 @@ export default function AAppBar() {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, width: '100%' }}>
+    <Box sx={{ flexGrow: 1, width: "100%" }}>
       <AppBar position="static">
         <Toolbar>
           {isMobile ? (
@@ -45,13 +45,13 @@ export default function AAppBar() {
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 keepMounted
                 transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
+                  vertical: "top",
+                  horizontal: "right",
                 }}
                 open={open}
                 onClose={handleClose}
@@ -59,7 +59,11 @@ export default function AAppBar() {
                 <MenuItem onClick={handleClose} component={Link} href="/">
                   Олимпиады
                 </MenuItem>
-                <MenuItem onClick={handleClose} component={Link} href="/students">
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  href="/students"
+                >
                   Участники
                 </MenuItem>
               </Menu>
@@ -70,7 +74,7 @@ export default function AAppBar() {
                 variant="h6"
                 noWrap
                 component="div"
-                sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
+                sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
               >
                 <Button href="/" variant="contained" color="primary">
                   Олимпиады
