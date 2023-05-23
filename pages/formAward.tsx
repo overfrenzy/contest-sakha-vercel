@@ -14,6 +14,8 @@ const InsertAward: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     awardName: "",
   });
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -34,16 +36,22 @@ const InsertAward: React.FC = () => {
       );
       const data = await response.json();
       console.log(data);
+      setSuccessMessage("Award added successfully");
+      setFormData({ awardName: "" });
     } catch (error) {
       console.error(error);
+      setErrorMessage("Error adding award");
     }
   };
 
   return (
     <Box sx={{ p: 2 }}>
       <h2>Insert Award</h2>
+      {successMessage && <p>{successMessage}</p>}
+      {errorMessage && <p>{errorMessage}</p>}
       <form onSubmit={handleSubmit}>
         <InputField
+          fullWidth
           label="Award Name"
           id="awardName"
           name="awardName"
@@ -52,7 +60,7 @@ const InsertAward: React.FC = () => {
         />
         <Box sx={{ display: "block", mt: 2 }}>
           <Button variant="contained" type="submit">
-            Submit
+            Add Award
           </Button>
         </Box>
       </form>

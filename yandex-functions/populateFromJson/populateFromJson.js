@@ -1,6 +1,5 @@
-const { Driver, getCredentialsFromEnv, getLogger } = require("ydb-sdk");
+const { Driver, getCredentialsFromEnv, Session, logger } = require("ydb-sdk");
 const { v4: uuidv4 } = require("uuid");
-const logger = getLogger({ level: "debug" });
 const endpoint = "grpcs://ydb.serverless.yandexcloud.net:2135";
 const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
 const authService = getCredentialsFromEnv();
@@ -11,7 +10,7 @@ async function insertSchoolname(session, schoolname_id, name) {
     UPSERT INTO schoolname (schoolname_id, name)
     VALUES (?, ?);
   `;
-  await session.createQuery(query).bind([schoolname_id, name]).execute();
+  await session.executeDataQuery(query, [schoolname_id, name]);
 }
 
 async function insertCountry(session, country_id, name) {
@@ -19,7 +18,7 @@ async function insertCountry(session, country_id, name) {
     UPSERT INTO country (country_id, name)
     VALUES (?, ?);
   `;
-  await session.createQuery(query).bind([country_id, name]).execute();
+  await session.executeDataQuery(query, [country_id, name]);
 }
 
 async function insertAward(session, award_id, name) {
@@ -27,7 +26,7 @@ async function insertAward(session, award_id, name) {
     UPSERT INTO award (award_id, name)
     VALUES (?, ?);
   `;
-  await session.createQuery(query).bind([award_id, name]).execute();
+  await session.executeDataQuery(query, [award_id, name]);
 }
 
 async function insertSchool(session, school_id, schoolname_id) {
@@ -35,7 +34,7 @@ async function insertSchool(session, school_id, schoolname_id) {
     UPSERT INTO school (school_id, schoolname_id)
     VALUES (?, ?);
   `;
-  await session.createQuery(query).bind([school_id, schoolname_id]).execute();
+  await session.executeDataQuery(query, [school_id, schoolname_id]);
 }
 
 async function insertParticipation(session, participation_id, contest_id) {
@@ -43,63 +42,15 @@ async function insertParticipation(session, participation_id, contest_id) {
     UPSERT INTO participation (participation_id, contest_id)
     VALUES (?, ?);
   `;
-  await session
-    .createQuery(query)
-    .bind([participation_id, contest_id])
-    .execute();
+  await session.executeDataQuery(query, [participation_id, contest_id]);
 }
 
 async function insertContest(session, contest_id, name, year, tasks) {
   const query = `
     UPSERT INTO contest (contest_id, name, year, tasks)
-    VALUES (?, ?, ?, ?);
+    VALUES (?, ?, ?);
   `;
-  await session
-    .createQuery(query)
-    .bind([contest_id, name, year, tasks])
-    .execute();
-}
-
-async function insertPlacement(
-  session,
-  placement_id,
-  participant_id,
-  contest_id,
-  award_id,
-  time,
-  total
-) {
-  const query = `
-    UPSERT INTO placement (
-      placement_id, participant_id, contest_id, award_id, time, total
-    )
-    VALUES (?, ?, ?, ?, ?, ?);
-  `;
-  await session
-    .createQuery(query)
-    .bind([placement_id, participant_id, contest_id, award_id, time, total])
-    .execute();
-}
-
-async function insertResult(
-  session,
-  result_id,
-  participant_id,
-  contest_id,
-  grade,
-  trycount,
-  time
-) {
-  const query = `
-    UPSERT INTO result (
-      result_id, participant_id, contest_id, grade, trycount, time
-    )
-    VALUES (?, ?, ?, ?, ?, ?);
-  `;
-  await session
-    .createQuery(query)
-    .bind([result_id, participant_id, contest_id, grade, trycount, time])
-    .execute();
+  await session.executeDataQuery(query, [contest_id, name, year, tasks]);
 }
 
 async function insertParticipant(
@@ -117,113 +68,132 @@ async function insertParticipant(
     )
     VALUES (?, ?, ?, ?, ?, ?);
   `;
-  await session
-    .createQuery(query)
-    .bind([
-      participant_id,
-      school_id,
-      country_id,
-      participation_id,
-      award_id,
-      name,
-    ])
-    .execute();
+  await session.executeDataQuery(query, [
+    participant_id,
+    school_id,
+    country_id,
+    participation_id,
+    award_id,
+    name,
+  ]);
 }
 
-// Main function to populate data
+async function insertPlacement(
+  session,
+  placement_id,
+  participant_id,
+  contest_id,
+  award_id,
+  tasksdone
+) {
+  const query = `
+    UPSERT INTO placement (
+      placement_id, participant_id, contest_id, award_id, tasksdone
+    )
+    VALUES (?, ?, ?, ?, ?);
+  `;
+  await session.executeDataQuery(query, [
+    placement_id,
+    participant_id,
+    contest_id,
+    award_id,
+    tasksdone,
+  ]);
+}
+
 async function populateData(data) {
-  await driver.tableClient.withSession(async (session) => {
-    try {
-      await session.beginTransaction({ serializableReadWrite: {} });
+  let tx;
+  await driver.tableClient
+    .withSession(async (session) => {
+      try {
+        tx = await session.beginTransaction({ serializableReadWrite: {} });
+        const countriesMap = new Map();
+        const contestsMap = new Map();
+        const awardsMap = new Map();
 
-      const countriesMap = new Map();
-      const contestsMap = new Map();
-      const awardsMap = new Map();
+        for (const student of data.students) {
+          const { participant_en, country_en, problems1, problems2, place } =
+            student;
 
-      for (const student of data.students) {
-        const { participant_en, country_en, problems1, problems2, place } =
-          student;
+          if (!countriesMap.has(country_en)) {
+            const country_id = uuidv4();
+            await insertCountry(session, country_id, country_en);
+            countriesMap.set(country_en, country_id);
+          }
 
-        // Insert country if not already inserted
-        if (!countriesMap.has(country_en)) {
-          const country_id = uuidv4();
-          await insertCountry(session, country_id, country_en);
-          countriesMap.set(country_en, country_id);
-        }
+          if (!awardsMap.has(place)) {
+            const award_id = uuidv4();
+            await insertAward(session, award_id, place);
+            awardsMap.set(place, award_id);
+          }
 
-        // Insert award if not already inserted
-        if (!awardsMap.has(place)) {
-          const award_id = uuidv4();
-          await insertAward(session, award_id, place);
-          awardsMap.set(place, award_id);
-        }
+          const contestName = "contest";
+          if (!contestsMap.has(contestName)) {
+            const contest_id = uuidv4();
+            await insertContest(
+              session,
+              contest_id,
+              contestName,
+              new Date().getFullYear(),
+              null
+            );
+            contestsMap.set(contestName, contest_id);
+          }
 
-        // Insert contest if not already inserted
-        const contestName = "Contest"; //
-        if (!contestsMap.has(contestName)) {
-          const contest_id = uuidv4();
-          const tasks = { problems1, problems2 };
-          await insertContest(
+          const participant_id = uuidv4();
+          const school_id = uuidv4();
+          const schoolname_id = uuidv4();
+          const participation_id = uuidv4();
+          const placement_id = uuidv4();
+          const tasksdone = JSON.stringify({ problems1, problems2 });
+
+          await insertSchoolname(session, schoolname_id, participant_en);
+          await insertSchool(session, school_id, schoolname_id);
+          await insertParticipant(
             session,
-            contest_id,
-            contestName,
-            new Date().getFullYear(),
-            JSON.stringify(tasks)
+            participant_id,
+            school_id,
+            countriesMap.get(country_en),
+            participation_id,
+            awardsMap.get(place),
+            participant_en
           );
-          contestsMap.set(contestName, contest_id);
+          await insertParticipation(
+            session,
+            participation_id,
+            contestsMap.get(contestName)
+          );
+          await insertPlacement(
+            session,
+            placement_id,
+            participant_id,
+            contestsMap.get(contestName),
+            awardsMap.get(place),
+            tasksdone
+          );
         }
 
-        const participant_id = uuidv4();
-        const school_id = uuidv4();
-        const schoolname_id = uuidv4();
-        const participation_id = uuidv4();
-        const result_id = uuidv4();
-        const placement_id = uuidv4();
-
-        await insertSchoolname(session, schoolname_id, participant_en);
-        await insertSchool(session, school_id, schoolname_id);
-        await insertParticipant(
-          session,
-          participant_id,
-          school_id,
-          countriesMap.get(country_en),
-          participation_id,
-          awardsMap.get(place),
-          participant_en
-        );
-        await insertParticipation(
-          session,
-          participation_id,
-          contestsMap.get(contestName)
-        );
-        await insertResult(
-          session,
-          result_id,
-          participant_id,
-          contestsMap.get(contestName),
-          null,
-          null,
-          null
-        );
-        await insertPlacement(
-          session,
-          placement_id,
-          participant_id,
-          contestsMap.get(contestName),
-          awardsMap.get(place),
-          null,
-          null
-        );
+        await session.commit(tx);
+      } catch (error) {
+        console.error("Error while populating data:", error);
+        try {
+          if (tx) {
+            await session.rollback(tx);
+            
+          }
+        } catch (rollbackError) {
+          console.error("Error rolling back transaction:", rollbackError);
+        }
       }
-
-      await session.commitTransaction();
-    } catch (error) {
-      console.error("Error:", error);
-      if (session.currentTransaction) {
-        await session.rollbackTransaction();
+    })
+    .catch((error) => {
+      console.error("Error creating session:", error);
+      if (tx) {
+        session.rollback(tx).catch((rollbackError) => {
+          console.error("Error rolling back transaction:", rollbackError);
+        });
       }
-    }
-  });
+    });
 }
 
 module.exports.handler = async (event) => {

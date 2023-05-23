@@ -1,41 +1,39 @@
 import { useState } from "react";
 
 async function uploadJSON(file: File): Promise<{ success: boolean; message: string }> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const reader = new FileReader();
-  
-        reader.onload = async (event) => {
-          const data = JSON.parse(event.target!.result as string);
-  
-          const functionUrl = "https://functions.yandexcloud.net/d4edctk1gbs4crg84dfu"; //populate-from-json ycf
-  
-          const response = await fetch(functionUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
-  
-          const result = await response.json();
-          resolve({ success: true, message: result.message });
-        };
-  
-        reader.onerror = (error) => {
-          console.error("Error:", error);
-          reject({ success: false, message: "Error reading JSON file" });
-        };
-  
-        reader.readAsText(file);
-      } catch (error) {
-        console.error("Error:", error);
-        reject({ success: false, message: "Error uploading JSON file" });
-      }
-    });
-  }
-  
+  return new Promise(async (resolve, reject) => {
+    try {
+      const reader = new FileReader();
 
+      reader.onload = async (event) => {
+        const data = event.target!.result as string;
+
+        const functionUrl = "https://functions.yandexcloud.net/d4edctk1gbs4crg84dfu"; //populate-from-json ycf
+
+        const response = await fetch(functionUrl, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: data,
+        });
+
+        const result = await response.json();
+        resolve({ success: true, message: result.message });
+      };
+
+      reader.onerror = (error) => {
+        console.error("Error:", error);
+        reject({ success: false, message: "Error reading JSON file" });
+      };
+
+      reader.readAsText(file);
+    } catch (error) {
+      console.error("Error:", error);
+      reject({ success: false, message: "Error uploading JSON file" });
+    }
+  });
+}
 
 export default function UploadJSON() {
   const [file, setFile] = useState(null);

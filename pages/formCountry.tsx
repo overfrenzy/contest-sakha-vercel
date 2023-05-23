@@ -14,9 +14,11 @@ const InsertCountry: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     countryName: "",
   });
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...  formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -34,16 +36,22 @@ const InsertCountry: React.FC = () => {
       );
       const data = await response.json();
       console.log(data);
+      setSuccessMessage("Country added successfully");
+      setFormData({ countryName: "" });
     } catch (error) {
       console.error(error);
+      setErrorMessage("Error adding country");
     }
   };
 
   return (
     <Box sx={{ p: 2 }}>
       <h2>Add Country</h2>
+      {successMessage && <p>{successMessage}</p>}
+      {errorMessage && <p>{errorMessage}</p>}
       <form onSubmit={handleSubmit}>
         <InputField
+          fullWidth
           label="Country Name"
           id="countryName"
           name="countryName"
@@ -52,7 +60,7 @@ const InsertCountry: React.FC = () => {
         />
         <Box sx={{ display: "block", mt: 2 }}>
           <Button variant="contained" type="submit">
-            Submit
+            Add Country
           </Button>
         </Box>
       </form>

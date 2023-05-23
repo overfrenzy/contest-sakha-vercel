@@ -51,10 +51,10 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const { contestName, year, tasks } = body;
+  const { name, year, tasks } = body;
 
   await insertContest(
-    contestName,
+    name,
     parseInt(year, 10),
     tasks
   );

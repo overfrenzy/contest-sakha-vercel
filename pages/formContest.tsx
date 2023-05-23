@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { TextField, Button, Box, InputLabel } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -18,6 +18,9 @@ const InsertContest: React.FC = () => {
     tasks: null,
     year: null,
   });
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -55,16 +58,25 @@ const InsertContest: React.FC = () => {
       );
       const data = await response.json();
       console.log(data);
+      setSuccessMessage("Contest added successfully");
+      setFormData({ name: null, tasks: null, year: null });
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
     } catch (error) {
       console.error(error);
+      setErrorMessage("Error adding contest");
     }
   };
 
   return (
     <Box sx={{ p: 2 }}>
       <h2>Insert Contest</h2>
+      {successMessage && <p>{successMessage}</p>}
+      {errorMessage && <p>{errorMessage}</p>}
       <form onSubmit={handleSubmit}>
         <InputField
+          fullWidth
           label="Name"
           id="name"
           name="name"
@@ -73,6 +85,7 @@ const InsertContest: React.FC = () => {
         />
         <br />
         <InputField
+          fullWidth
           label="Year"
           id="year"
           name="year"
@@ -84,14 +97,16 @@ const InsertContest: React.FC = () => {
         <InputLabel htmlFor="tasks">Contest Tasks:</InputLabel>
         <br />
         <InputField
+          fullWidth
           type="file"
           id="tasks"
           name="tasks"
+          inputRef={fileInputRef}
           onChange={handleFileChange}
         />
         <br />
         <Button variant="contained" type="submit">
-          Submit
+          Add Contest
         </Button>
       </form>
     </Box>

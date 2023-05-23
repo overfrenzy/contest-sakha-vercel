@@ -12,30 +12,61 @@ async function insertParticipant(participant) {
     process.exit(1);
   }
 
-  participant.participant_id = uuidv4();
-  participant.school_id = uuidv4();
-  participant.country_id = uuidv4();
-  participant.participation_id = uuidv4();
-  participant.award_id = uuidv4();
+  const participantId = uuidv4();
+  const participationId = uuidv4();
 
   await driver.tableClient.withSession(async (session) => {
+    // Insert participant
     await session.executeQuery(`
-      INSERT INTO participant (participant_id, school_id, country_id, participation_id, award_id, name)
-      VALUES ('${participant.participant_id}', '${participant.school_id}', '${participant.country_id}', '${participant.participation_id}', '${participant.award_id}', '${participant.name}');
+      INSERT INTO participant (participant_id, school_id, country_id, participation_id, name)
+      VALUES ('${participantId}', '${participant.school}', '${participant.country}', '${participationId}', '${participant.name}');
+    `);
+
+    // Insert participation
+    await session.executeQuery(`
+      INSERT INTO participation (participation_id, participant_id, award_id, contest_id, tasksdone, time, trycount)
+      VALUES ('${participationId}', '${participantId}', '${participant.award}', '${participant.contest}', '${participant.tasksDone}', ${participant.time || 'NULL'}, ${participant.tryCount || 'NULL'});
     `);
   });
 }
 
 exports.handler = async (event, context) => {
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: headers,
+      body: "",
+    };
+  }
+
+  if (!event.body || event.body.trim() === "") {
+    return {
+      statusCode: 400,
+      headers: headers,
+      body: JSON.stringify({ message: "Empty request body" }),
+    };
+  }
+
   try {
     const participant = JSON.parse(event.body);
     await insertParticipant(participant);
     return {
       statusCode: 200,
-      body: JSON.stringify({ message: 'Participant inserted successfully' }),
+      headers: headers,
+      body: JSON.stringify({ message: "Participant inserted successfully" }),
     };
   } catch (err) {
     console.log(err);
-    return { statusCode: 500, body: err.toString() };
+    return {
+      statusCode: 500,
+      headers: headers,
+      body: err.toString(),
+    };
   }
 };

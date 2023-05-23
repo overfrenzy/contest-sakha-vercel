@@ -6,6 +6,18 @@ const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
 const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
+async function insertSchool(schoolnameId) {
+  const schoolId = uuidv4();
+  const query = `
+    INSERT INTO school (school_id, schoolname_id)
+    VALUES ("${schoolId}", "${schoolnameId}")
+  `;
+  await driver.tableClient.withSession(async (session) => {
+    await session.executeQuery(query);
+  });
+  return schoolId;
+}
+
 async function insertSchoolname(name) {
   const schoolnameId = uuidv4();
   const query = `
@@ -15,6 +27,9 @@ async function insertSchoolname(name) {
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
   });
+
+  await insertSchool(schoolnameId);
+
   return schoolnameId;
 }
 
