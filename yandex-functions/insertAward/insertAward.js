@@ -1,21 +1,31 @@
 const { Driver, getCredentialsFromEnv, getLogger } = require("ydb-sdk");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require("uuid");
 const logger = getLogger({ level: "debug" });
 const endpoint = "grpcs://ydb.serverless.yandexcloud.net:2135";
 const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
 const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
-async function insertAward(name) {
-  const awardId = uuidv4();
+async function upsertAward(awardId, name) {
   const query = `
-    INSERT INTO award (award_id, name)
+    UPSERT INTO award (award_id, name)
     VALUES ("${awardId}", "${name}")
   `;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
   });
-  return awardId;
+}
+
+async function deleteAward(awardId) {
+  const query = `
+    DELETE FROM award
+    WHERE award_id = "${awardId}"
+  `;
+  console.log("Deleting award with ID:", awardId);
+  console.log("Delete query:", query);
+  await driver.tableClient.withSession(async (session) => {
+    await session.executeQuery(query);
+  });
 }
 
 exports.handler = async (event, context) => {
@@ -24,7 +34,7 @@ exports.handler = async (event, context) => {
       statusCode: 200,
       headers: {
         "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Methods": "POST, PUT, DELETE, OPTIONS",
         "Access-Control-Allow-Headers": "Content-Type",
       },
       body: "",
@@ -50,12 +60,57 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const { awardName } = body;
+  const { operation, awardId, awardName } = body;
 
-  await insertAward(awardName);
+  if (!operation) {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: "Invalid request body" }),
+    };
+  }
+
+  if (operation === "insert" || operation === "update") {
+    if (!awardName) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "Invalid request body" }),
+      };
+    }
+
+    // Generate a new UUID for insert operation
+    const upsertAwardId = operation === "insert" ? uuidv4() : awardId;
+
+    await upsertAward(upsertAwardId, awardName);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message:
+          operation === "insert"
+            ? "Award added successfully"
+            : "Award updated successfully",
+      }),
+    };
+  }
+
+  if (operation === "delete") {
+    if (!awardId) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "Invalid request body" }),
+      };
+    }
+
+    await deleteAward(awardId);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Award deleted successfully" }),
+    };
+  }
 
   return {
-    statusCode: 200,
-    body: JSON.stringify({ message: "Award added successfully" }),
+    statusCode: 400,
+    body: JSON.stringify({ message: "Invalid operation" }),
   };
 };

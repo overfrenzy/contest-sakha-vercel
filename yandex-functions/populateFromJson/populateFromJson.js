@@ -1,234 +1,189 @@
-const { Driver, getCredentialsFromEnv, Session, logger } = require("ydb-sdk");
-const { v4: uuidv4 } = require("uuid");
-const endpoint = "grpcs://ydb.serverless.yandexcloud.net:2135";
-const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
+const { Driver, getCredentialsFromEnv, Type } = require('ydb-sdk');
+const { v4: uuidv4 } = require('uuid');
+
+const endpoint = 'grpcs://ydb.serverless.yandexcloud.net:2135';
+const database = '/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714';
 const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
-async function insertSchoolname(session, schoolname_id, name) {
-  const query = `
-    UPSERT INTO schoolname (schoolname_id, name)
-    VALUES (?, ?);
-  `;
-  await session.executeDataQuery(query, [schoolname_id, name]);
-}
+async function insertData(jsonData) {
+  const contestName = jsonData.students[0].contest;
 
-async function insertCountry(session, country_id, name) {
-  const query = `
-    UPSERT INTO country (country_id, name)
-    VALUES (?, ?);
-  `;
-  await session.executeDataQuery(query, [country_id, name]);
-}
+  const parsedData = jsonData.students.map((student) => {
+    const participantName = student.participant_en;
+    const countryName = student.country_en;
+    const tasksDone = JSON.stringify(student.problems1.concat(student.problems2));
+    const awardName = student.place;
 
-async function insertAward(session, award_id, name) {
-  const query = `
-    UPSERT INTO award (award_id, name)
-    VALUES (?, ?);
-  `;
-  await session.executeDataQuery(query, [award_id, name]);
-}
+    return {
+      participant: { name: participantName },
+      country: { name: countryName },
+      award: { name: awardName },
+      participation: { tasksDone: tasksDone, contestName: contestName },
+    };
+  });
 
-async function insertSchool(session, school_id, schoolname_id) {
-  const query = `
-    UPSERT INTO school (school_id, schoolname_id)
-    VALUES (?, ?);
-  `;
-  await session.executeDataQuery(query, [school_id, schoolname_id]);
-}
+  const insertPromises = parsedData.map(async (data) => {
+    const participantId = uuidv4();
+    const participationId = uuidv4();
+    const countryId = uuidv4();
+    const awardId = uuidv4();
+    let schoolId;
 
-async function insertParticipation(session, participation_id, contest_id) {
-  const query = `
-    UPSERT INTO participation (participation_id, contest_id)
-    VALUES (?, ?);
-  `;
-  await session.executeDataQuery(query, [participation_id, contest_id]);
-}
+    await driver.tableClient.withSession(async (session) => {
+      // Check if contest exists
+      const contestQuery = `
+        SELECT contest_id
+        FROM contest
+        WHERE name = '${data.participation.contestName}'
+        LIMIT 1;
+      `;
+      const contestParams = {
+        $params: {
+          contestName: Type.createString(data.participation.contestName),
+        },
+      };
 
-async function insertContest(session, contest_id, name, year, tasks) {
-  const query = `
-    UPSERT INTO contest (contest_id, name, year, tasks)
-    VALUES (?, ?, ?);
-  `;
-  await session.executeDataQuery(query, [contest_id, name, year, tasks]);
-}
-
-async function insertParticipant(
-  session,
-  participant_id,
-  school_id,
-  country_id,
-  participation_id,
-  award_id,
-  name
-) {
-  const query = `
-    UPSERT INTO participant (
-      participant_id, school_id, country_id, participation_id, award_id, name
-    )
-    VALUES (?, ?, ?, ?, ?, ?);
-  `;
-  await session.executeDataQuery(query, [
-    participant_id,
-    school_id,
-    country_id,
-    participation_id,
-    award_id,
-    name,
-  ]);
-}
-
-async function insertPlacement(
-  session,
-  placement_id,
-  participant_id,
-  contest_id,
-  award_id,
-  tasksdone
-) {
-  const query = `
-    UPSERT INTO placement (
-      placement_id, participant_id, contest_id, award_id, tasksdone
-    )
-    VALUES (?, ?, ?, ?, ?);
-  `;
-  await session.executeDataQuery(query, [
-    placement_id,
-    participant_id,
-    contest_id,
-    award_id,
-    tasksdone,
-  ]);
-}
-
-async function populateData(data) {
-  let tx;
-  await driver.tableClient
-    .withSession(async (session) => {
       try {
-        tx = await session.beginTransaction({ serializableReadWrite: {} });
-        const countriesMap = new Map();
-        const contestsMap = new Map();
-        const awardsMap = new Map();
+        const contestResult = await session.executeQuery(contestQuery, contestParams);
 
-        for (const student of data.students) {
-          const { participant_en, country_en, problems1, problems2, place } =
-            student;
-
-          if (!countriesMap.has(country_en)) {
-            const country_id = uuidv4();
-            await insertCountry(session, country_id, country_en);
-            countriesMap.set(country_en, country_id);
-          }
-
-          if (!awardsMap.has(place)) {
-            const award_id = uuidv4();
-            await insertAward(session, award_id, place);
-            awardsMap.set(place, award_id);
-          }
-
-          const contestName = "contest";
-          if (!contestsMap.has(contestName)) {
-            const contest_id = uuidv4();
-            await insertContest(
-              session,
-              contest_id,
-              contestName,
-              new Date().getFullYear(),
-              null
-            );
-            contestsMap.set(contestName, contest_id);
-          }
-
-          const participant_id = uuidv4();
-          const school_id = uuidv4();
-          const schoolname_id = uuidv4();
-          const participation_id = uuidv4();
-          const placement_id = uuidv4();
-          const tasksdone = JSON.stringify({ problems1, problems2 });
-
-          await insertSchoolname(session, schoolname_id, participant_en);
-          await insertSchool(session, school_id, schoolname_id);
-          await insertParticipant(
-            session,
-            participant_id,
-            school_id,
-            countriesMap.get(country_en),
-            participation_id,
-            awardsMap.get(place),
-            participant_en
-          );
-          await insertParticipation(
-            session,
-            participation_id,
-            contestsMap.get(contestName)
-          );
-          await insertPlacement(
-            session,
-            placement_id,
-            participant_id,
-            contestsMap.get(contestName),
-            awardsMap.get(place),
-            tasksdone
-          );
+        if (!contestResult) {
+          throw new Error('Contest result object is undefined');
         }
 
-        await session.commit(tx);
-      } catch (error) {
-        console.error("Error while populating data:", error);
-        try {
-          if (tx) {
-            await session.rollback(tx);
-            
-          }
-        } catch (rollbackError) {
-          console.error("Error rolling back transaction:", rollbackError);
-        }
+        console.log('Contest result object:', contestResult);
+
+        const resultSet = contestResult.resultSet;
+
+        const contestExists = resultSet && resultSet.rows && resultSet.rows.length > 0;
+
+      // If contest doesn't exist, insert it
+      let contestId;
+      if (!contestExists) {
+        contestId = uuidv4();
+        await session.executeQuery(`
+          INSERT INTO contest (contest_id, name)
+          VALUES ('${contestId}', '${data.participation.contestName}');
+        `);
+      } else {
+        contestId = contestResult.resultSet.rows[0].values[0].stringValue;
       }
-    })
-    .catch((error) => {
-      console.error("Error creating session:", error);
-      if (tx) {
-        session.rollback(tx).catch((rollbackError) => {
-          console.error("Error rolling back transaction:", rollbackError);
-        });
+
+      // Insert country
+      await session.executeQuery(`
+        INSERT INTO country (country_id, name)
+        VALUES ('${countryId}', '${data.country.name}');
+      `);
+
+      // Insert school
+      const schoolQuery = `
+        SELECT school_id
+        FROM schoolname
+        WHERE name = '${contestName}'
+        LIMIT 1;
+      `;
+      const schoolResult = await session.executeQuery(schoolQuery);
+      const schoolExists = schoolResult.resultSet.rows.length > 0;
+
+      if (!schoolExists) {
+        schoolId = uuidv4();
+        await session.executeQuery(`
+          INSERT INTO schoolname (schoolname_id, name)
+          VALUES ('${schoolId}', '${contestName}');
+        `);
+      } else {
+        schoolId = schoolResult.resultSet.rows[0].values[0].stringValue;
       }
-    });
+
+      // Insert participant
+      await session.executeQuery(`
+        INSERT INTO participant (participant_id, country_id, school_id, participation_id, name)
+        VALUES ('${participantId}', '${countryId}', '${schoolId}', '${participationId}', '${data.participant.name}');
+      `);
+
+      // Insert participation
+      await session.executeQuery(`
+        INSERT INTO participation (participation_id, participant_id, award_id, contest_id, tasksdone)
+        VALUES ('${participationId}', '${participantId}', '${awardId}', '${contestId}', '${data.participation.tasksDone}');
+      `);
+
+      // Insert award
+      await session.executeQuery(`
+        INSERT INTO award (award_id, name)
+        VALUES ('${awardId}', '${data.award.name}');
+      `);
+    } catch (error) {
+      console.error('Error fetching contest data:', error.message);
+      throw error;
+    }
+  });
+});
+
+  await Promise.all(insertPromises);
 }
 
-module.exports.handler = async (event) => {
-  if (event.httpMethod === "OPTIONS") {
+async function fetchAllData(jsonData) {
+  const contestName = jsonData.students[0].contest;
+
+  const query = `
+    SELECT *
+    FROM schoolname
+      JOIN school ON schoolname.schoolname_id = school.schoolname_id
+      JOIN participant ON school.school_id = participant.school_id
+      JOIN country ON participant.country_id = country.country_id
+      JOIN participation ON participant.participant_id = participation.participant_id
+      JOIN award ON participation.award_id = award.award_id
+      JOIN contest ON participation.contest_id = contest.contest_id
+    WHERE contest.name = '${contestName}'
+  `;
+
+  const result = await driver.tableClient.withSession(async (session) => {
+    return await session.executeQuery(query);
+  });
+
+  if (result && result.resultSet && result.resultSet.rows) {
+    return result.resultSet.rows;
+  } else {
+    throw new Error('Failed to fetch data from YDB');
+  }
+}
+
+
+exports.handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS, POST",
-        "Access-Control-Allow-Headers": "Content-Type",
+        'Access-Control-Allow-Origin':'*',
+        'Access-Control-Allow-Methods': 'OPTIONS, POST',
+        'Access-Control-Allow-Headers': 'Content-Type',
       },
-      body: "",
+      body: '',
     };
   }
 
-  if (event.httpMethod === "POST") {
-    const data = JSON.parse(event.body);
-    await populateData(data);
+  if (event.httpMethod === 'POST') {
+    const jsonData = JSON.parse(event.body);
+    await insertData(jsonData);
+
+    const result = await fetchAllData(jsonData);
 
     return {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS, POST",
-        "Access-Control-Allow-Headers": "Content-Type",
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'OPTIONS, POST',
+        'Access-Control-Allow-Headers': 'Content-Type',
       },
-      body: JSON.stringify({ message: "Data populated successfully" }),
+      body: JSON.stringify(result),
     };
   }
 
   return {
     statusCode: 405,
     headers: {
-      "Access-Control-Allow-Origin": "*",
+      'Access-Control-Allow-Origin': '*',
     },
-    body: JSON.stringify({ message: "Method not allowed" }),
+    body: JSON.stringify({ message: 'Method not allowed' }),
   };
 };
