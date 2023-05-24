@@ -6,17 +6,25 @@ const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
 const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
-async function insertContest(name, year, tasks) {
-  const contestId = uuidv4();
+async function upsertContest(contestId, name, year, tasks) {
   const tasksJson = JSON.stringify(tasks);
   const query = `
-    INSERT INTO contest (contest_id, name, year, tasks)
+    UPSERT INTO contest (contest_id, name, year, tasks)
     VALUES ("${contestId}", "${name}", ${year}, '${tasksJson}')
   `;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
   });
   return contestId;
+}
+
+async function deleteContest(contestId) {
+  const query = `
+    DELETE FROM contest WHERE contest_id = "${contestId}"
+  `;
+  await driver.tableClient.withSession(async (session) => {
+    await session.executeQuery(query);
+  });
 }
 
 exports.handler = async (event, context) => {
@@ -51,16 +59,31 @@ exports.handler = async (event, context) => {
     };
   }
 
-  const { name, year, tasks } = body;
+  const { contestId, name, year, tasks } = body;
 
-  await insertContest(
-    name,
-    parseInt(year, 10),
-    tasks
-  );
-
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: "Contest added successfully" }),
-  };
+  if (event.httpMethod === "POST" || event.httpMethod === "PUT") {
+    const id = contestId || uuidv4();
+    await upsertContest(id, name, parseInt(year, 10), tasks);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Contest upserted successfully" }),
+    };
+  } else if (event.httpMethod === "DELETE") {
+    if (!contestId) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ message: "Contest ID is required for deletion" }),
+      };
+    }
+    await deleteContest(contestId);
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ message: "Contest deleted successfully" }),
+    };
+  } else {
+    return {
+      statusCode: 400,
+      body: JSON.stringify({ message: "Invalid HTTP method" }),
+    };
+  }
 };
