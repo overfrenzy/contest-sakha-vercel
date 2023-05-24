@@ -36,8 +36,10 @@ function InsertParticipant() {
 
   const [selectedContest, setSelectedContest] = useState("");
   const [selectedAward, setSelectedAward] = useState("");
-  const [tasks, setTasks] = useState("");
-  const [tasksArray, setTasksArray] = useState<string[]>([]);
+  const [tasks1, setTasks1] = useState("");
+  const [tasksArray1, setTasksArray1] = useState<string[]>([]);
+  const [tasks2, setTasks2] = useState("");
+  const [tasksArray2, setTasksArray2] = useState<string[]>([]);
   const [time, setTime] = useState("");
   const [tryCount, setTryCount] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -47,9 +49,13 @@ function InsertParticipant() {
     fetchData();
   }, []);
 
+  const refreshData = () => {
+    fetchData();
+  };
+
   async function fetchData() {
     const response = await fetch(
-      "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f",
+      "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f", //fetch-db function
       {
         method: "GET",
       }
@@ -59,14 +65,22 @@ function InsertParticipant() {
     setLoading(false);
   }
 
-  const handleTasksChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTasks(e.target.value);
-    setTasksArray(e.target.value.split(",").map(task => task.trim()));
+  const handleTasksChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTasks1(e.target.value);
+    setTasksArray1(e.target.value.split(",").map((task) => task.trim()));
+  };
+
+  const handleTasksChange2 = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTasks2(e.target.value);
+    setTasksArray2(e.target.value.split(",").map((task) => task.trim()));
   };
 
   async function addParticipant() {
     try {
-      const tasksDoneJson = JSON.stringify(tasksArray); // convert tasksArray to JSON
+      const tasksDoneJson = JSON.stringify({
+        problems1: tasksArray1,
+        problems2: tasksArray2,
+      }); // convert tasksArray1 and tasksArray2 to JSON
       const response = await fetch(
         "https://functions.yandexcloud.net/d4eqfmirprh225fg72au",
         {
@@ -86,7 +100,7 @@ function InsertParticipant() {
           }),
         }
       );
-  
+
       if (response.ok) {
         setSuccessMessage("Participant has been added successfully.");
         clearForm();
@@ -104,8 +118,10 @@ function InsertParticipant() {
     setParticipantName("");
     setSelectedContest("");
     setSelectedAward("");
-    setTasks("");
-    setTasksArray([]);
+    setTasks1("");
+    setTasksArray1([]);
+    setTasks2("");
+    setTasksArray2([]);
     setTime("");
     setTryCount("");
   };
@@ -136,6 +152,7 @@ function InsertParticipant() {
                 ))}
             </Select>
           </FormControl>
+          <Button onClick={refreshData}>Refresh</Button>
         </Grid>
         <Grid item xs={6}>
           <FormControl fullWidth>
@@ -156,6 +173,7 @@ function InsertParticipant() {
                 ))}
             </Select>
           </FormControl>
+          <Button onClick={refreshData}>Refresh</Button>
         </Grid>
         <Grid item xs={12}>
           <TextField
@@ -183,6 +201,7 @@ function InsertParticipant() {
                 ))}
             </Select>
           </FormControl>
+          <Button onClick={refreshData}>Refresh</Button>
         </Grid>
         <Grid item xs={6}>
           <FormControl fullWidth>
@@ -191,6 +210,7 @@ function InsertParticipant() {
               value={selectedAward}
               onChange={(e) => setSelectedAward(e.target.value)}
             >
+              <MenuItem value="">None</MenuItem>
               {data.awards &&
                 data.awards.map((award) => (
                   <MenuItem key={award.award_id} value={award.award_id}>
@@ -199,15 +219,24 @@ function InsertParticipant() {
                 ))}
             </Select>
           </FormControl>
+
+          <Button onClick={refreshData}>Refresh</Button>
         </Grid>
-        <Grid item xs={12}>
-        <TextField
-          label="Tasks Done (comma separated)"
-          variant="outlined"
-          fullWidth
-          value={tasks}
-          onChange={handleTasksChange}
-        />
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            label="Tasks Day 1 (comma separated)"
+            value={tasks1}
+            onChange={handleTasksChange1}
+          />
+        </Grid>
+        <Grid item xs={6}>
+          <TextField
+            fullWidth
+            label="Tasks Day 2 (comma separated)"
+            value={tasks2}
+            onChange={handleTasksChange2}
+          />
         </Grid>
         <Grid item xs={6}>
           <TextField
@@ -219,38 +248,37 @@ function InsertParticipant() {
           />
         </Grid>
         <Grid item xs={4}>
-        <TextField
-          label="Try Count"
-          variant="outlined"
-          fullWidth
-          value={tryCount}
-          onChange={(e) => setTryCount(e.target.value)}
-        />
+          <TextField
+            label="Try Count (optional)"
+            variant="outlined"
+            fullWidth
+            value={tryCount}
+            onChange={(e) => setTryCount(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={4}>
+          <Button variant="contained" color="primary" onClick={addParticipant}>
+            Add Participant
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          {successMessage && (
+            <Box mt={2}>
+              <Typography variant="subtitle1" color="primary">
+                {successMessage}
+              </Typography>
+            </Box>
+          )}
+          {errorMessage && (
+            <Box mt={2}>
+              <Typography variant="subtitle1" color="error">
+                {errorMessage}
+              </Typography>
+            </Box>
+          )}
+        </Grid>
       </Grid>
-      <Grid item xs={4}>
-        <Button variant="contained" color="primary" onClick={addParticipant}>
-          Add Participant
-        </Button>
-      </Grid>
-      <Grid item xs={12}>
-        {successMessage && (
-          <Box mt={2}>
-            <Typography variant="subtitle1" color="primary">
-              {successMessage}
-            </Typography>
-          </Box>
-        )}
-        {errorMessage && (
-          <Box mt={2}>
-            <Typography variant="subtitle1" color="error">
-              {errorMessage}
-            </Typography>
-          </Box>
-        )}
-      </Grid>
-    </Grid>
-  </div>
-);
+    </div>
+  );
 }
 export default InsertParticipant;
-

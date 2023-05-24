@@ -36,11 +36,12 @@ async function fetchData() {
     participations = participationsResult.resultSets[0].rows.map(row => {
       const award_id = row.items[0]?.bytesValue?.toString('utf8') || '';
       const contest_id = row.items[1]?.bytesValue?.toString('utf8') || '';
-      const participation_id = row.items[2]?.bytesValue?.toString('utf8') || '';
-      const tasksdone = row.items[3].textValue;
-      const time = row.items[4].textValue;
-      const trycount = row.items[5].textValue;
-      return { award_id, contest_id, participation_id, tasksdone, time, trycount };
+      const participant_id = row.items[2]?.bytesValue?.toString('utf8') || '';
+      const participation_id = row.items[3]?.bytesValue?.toString('utf8') || '';
+      const tasksdone = row.items[4].textValue;
+      const time = row.items[5].textValue;
+      const trycount = row.items[6].textValue;
+      return { award_id, contest_id, participant_id, participation_id, tasksdone, time, trycount };
     });
 
     // Fetch awards data
@@ -74,6 +75,19 @@ async function fetchData() {
       const schoolname_id = row.items[1]?.bytesValue?.toString('utf8') || '';
       return { name, schoolname_id };
     });
+
+    // Fetch participant names data
+    const participantResult = await session.executeQuery(`
+      SELECT * FROM participant;
+    `);
+    participants = participantResult.resultSets[0].rows.map(row => {
+      const country_id = row.items[0]?.bytesValue?.toString('utf8') || '';
+      const name = row.items[1].textValue;
+      const participant_id = row.items[2]?.bytesValue?.toString('utf8') || '';
+      const participation_id = row.items[3]?.bytesValue?.toString('utf8') || '';
+      const school_id = row.items[4]?.bytesValue?.toString('utf8') || '';
+      return { country_id, name, participant_id, participation_id, school_id };
+    });
   });
 
   return {
@@ -83,6 +97,7 @@ async function fetchData() {
     awards,
     contests,
     schoolnames,
+    participants,
   };
 }
 

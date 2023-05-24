@@ -5,6 +5,11 @@ import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import { useState, useMemo } from "react";
 
+function calculateTotal(problems) {
+  const total = problems.reduce((acc, problem) => acc + parseInt(problem), 0);
+  return `${total}/${problems.length * 100}`;
+}
+
 export default function Home(props) {
   const theme = useTheme();
   const [sortConfig, setSortConfig] = useState({
@@ -12,22 +17,34 @@ export default function Home(props) {
     direction: "desc",
   });
 
-  const students = useMemo(() => {
-    const sortedStudents = [...props.students];
+  const participations = useMemo(() => {
+    const sortedParticipations = [...props.filteredParticipations];
 
-    sortedStudents.sort((a, b) => {
+    sortedParticipations.sort((a, b) => {
       const totalA =
-        a.problems1.reduce((s, v) => (s += v), 0) +
-        a.problems2.reduce((s, v) => (s += v), 0);
+        a.tasksdone.problems1.reduce((s, v) => (s += parseInt(v, 10)), 0) +
+        a.tasksdone.problems2.reduce((s, v) => (s += parseInt(v, 10)), 0);
       const totalB =
-        b.problems1.reduce((s, v) => (s += v), 0) +
-        b.problems2.reduce((s, v) => (s += v), 0);
+        b.tasksdone.problems1.reduce((s, v) => (s += parseInt(v, 10)), 0) +
+        b.tasksdone.problems2.reduce((s, v) => (s += parseInt(v, 10)), 0);
 
       return sortConfig.direction === "asc" ? totalA - totalB : totalB - totalA;
     });
 
-    return sortedStudents;
-  }, [props.students, sortConfig]);
+    return sortedParticipations.map((participation, index) => {
+      const problems1 = participation.tasksdone.problems1.map(String);
+      const problems2 = participation.tasksdone.problems2.map(String);
+      const total = calculateTotal([...problems1, ...problems2]);
+      return {
+        awardName: participation.awardName,
+        name: participation.name,
+        country: participation.country,
+        problems1,
+        problems2,
+        total,
+      };
+    });
+  }, [props.filteredParticipations, sortConfig]);
 
   const handleSort = (key) => {
     let direction = "asc";
@@ -37,15 +54,13 @@ export default function Home(props) {
     setSortConfig({ key, direction });
   };
 
-  // Calculate the maximum length of problems1 and problems2 arrays
   const maxProblems1Length = Math.max(
-    ...students.map((student) => student.problems1.length)
+    ...participations.map((participation) => participation.problems1.length)
   );
   const maxProblems2Length = Math.max(
-    ...students.map((student) => student.problems2.length)
+    ...participations.map((participation) => participation.problems2.length)
   );
 
-  // Generate table headers based on the maximum length
   const generateHeaders = (length) => {
     if (length === 3) {
       return ["1", "2", "3"];
@@ -66,6 +81,28 @@ export default function Home(props) {
   const headers1 = generateHeaders(maxProblems1Length);
   const headers2 = generateHeaders(maxProblems2Length);
 
+  const calculateColumnTotal = (values) => {
+    return values.reduce((total, value) => total + parseInt(value), 0);
+  };
+
+  const columnTotals = [
+    "", // Empty cell for the first column
+    "", // Empty cell for the second column
+    "", // Empty cell for the third column
+    ...headers1.map((header, index) => {
+      const values = participations.map((participation) =>
+        parseInt(participation.problems1[index] || 0, 10)
+      );
+      return calculateColumnTotal(values);
+    }),
+    ...headers2.map((header, index) => {
+      const values = participations.map((participation) =>
+        parseInt(participation.problems2[index] || 0, 10)
+      );
+      return calculateColumnTotal(values);
+    }),
+  ];
+
   return (
     <>
       <AppBar />
@@ -73,14 +110,7 @@ export default function Home(props) {
       <h2 className={indexStyles.title}>Протокол</h2>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <table
-            className={styles.table}
-            style={{
-              width: "100%",
-              overflowX: "auto",
-              fontSize: theme.breakpoints.down("sm") ? "0.8em" : "1em",
-            }}
-          >
+          <table className={styles.table}>
             <thead>
               <tr>
                 <th rowSpan={2}>№</th>
@@ -117,38 +147,35 @@ export default function Home(props) {
               </tr>
             </thead>
             <tbody>
-              {students.map((elem, i) => (
+              {participations.map((participation, i) => (
                 <tr key={i.toString()}>
                   <td>{i + 1}</td>
-                  <td>
-                    {elem.participant_ru} <br /> {elem.participant_en}
-                  </td>
-                  <td>
-                    {elem.country_ru}
-                    <br />
-                    {elem.country_en}
-                  </td>
-                  {elem.problems1.map((problem, idx) => (
+                  <td>{participation.name}</td>
+                  <td>{participation.country}</td>
+                  {participation.problems1.map((problem, idx) => (
                     <td key={idx} className={styles.value}>
-                      {problem}
+                      {parseInt(problem, 10)}
                     </td>
                   ))}
                   <td className={styles.value}>
-                    {elem.problems1.reduce((s, v) => (s += v), 0)}
+                    {participation.problems1.reduce(
+                      (s, v) => (s += parseInt(v, 10)),
+                      0
+                    )}
                   </td>
-                  {elem.problems2.map((problem, idx) => (
+                  {participation.problems2.map((problem, idx) => (
                     <td key={idx} className={styles.value}>
-                      {problem}
+                      {parseInt(problem, 10)}
                     </td>
                   ))}
                   <td className={styles.value}>
-                    {elem.problems2.reduce((s, v) => (s += v), 0)}
+                    {participation.problems2.reduce(
+                      (s, v) => (s += parseInt(v, 10)),
+                      0
+                    )}
                   </td>
-                  <td className={styles.value}>
-                    {elem.problems1.reduce((s, v) => (s += v), 0) +
-                      elem.problems2.reduce((s, v) => (s += v), 0)}
-                  </td>
-                  <td className={styles.value}>{elem.place}</td>
+                  <td className={styles.value}>{participation.total}</td>
+                  <td className={styles.value}>{participation.awardName}</td>
                 </tr>
               ))}
             </tbody>
@@ -159,15 +186,46 @@ export default function Home(props) {
   );
 }
 
-// Fetching data from the JSON file
-import fsPromises from "fs/promises";
-import path from "path";
 export async function getStaticProps() {
-  const filePath = path.join(process.cwd(), "./shared/data2021.json");
-  const jsonData = await fsPromises.readFile(filePath);
-  const objectData = JSON.parse(jsonData.toString());
+  const response = await fetch(
+    "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f"
+  );
+  const data = await response.json();
+
+  const contestPage = data.contests.find(
+    (contest) => contest.name === "TUY-2021"
+  );
+  const contestPageId = contestPage ? contestPage.contest_id : null;
+
+  const filteredParticipations = data.participations.filter(
+    (participation) => participation.contest_id === contestPageId
+  );
+
+  // Join participations with participants, countries, and awards
+  const participations = filteredParticipations.map((participation) => {
+    const tasksdone = JSON.parse(participation.tasksdone);
+    const participant = data.participants.find(
+      (participant) =>
+        participant.participant_id === participation.participant_id
+    );
+    const country = data.countries.find(
+      (country) => country.country_id === participant.country_id
+    );
+    const award = data.awards.find(
+      (award) => award.award_id === participation.award_id
+    );
+
+    return {
+      tasksdone,
+      name: participant.name,
+      country: country.name,
+      awardName: award ? award.name : "",
+    };
+  });
 
   return {
-    props: objectData,
+    props: {
+      filteredParticipations: participations,
+    },
   };
 }
