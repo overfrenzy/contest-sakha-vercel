@@ -44,11 +44,7 @@ const ManageAwards: React.FC = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  const handleOperation = (operation: FormData["operation"]) => {
-    setFormData({ ...formData, operation });
-  };
-
+  
   const fetchAwards = async () => {
     try {
       const response = await fetch(
@@ -138,23 +134,9 @@ const ManageAwards: React.FC = () => {
           value={formData.awardName}
           onChange={handleChange}
         />
-        <Box sx={{ display: "block", mt: 2 }}>
-          <Button
-            variant="contained"
-            type="submit"
-            onClick={() => handleOperation("insert")}
-          >
-            Add Award
-          </Button>
-          <Button
-            variant="contained"
-            type="submit"
-            onClick={() => handleOperation("update")}
-            sx={{ mx: 1 }}
-          >
-            {formData.operation === "update" ? "Update Award" : "Edit Award"}
-          </Button>
-        </Box>
+        <Button variant="contained" type="submit">
+          {formData.awardId ? "Update Award" : "Add Award"}
+        </Button>
       </form>
       <TableContainer component={Paper} sx={{ mt: 4 }}>
         <Table>
@@ -186,7 +168,9 @@ const ManageAwards: React.FC = () => {
                     </Button>
                     <Button
                       variant="contained"
+                      color="secondary"
                       onClick={() => handleDelete(award.award_id)}
+                      sx={{ mx: 1 }}
                     >
                       Delete
                     </Button>

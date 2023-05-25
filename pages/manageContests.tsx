@@ -16,8 +16,15 @@ import { styled } from "@mui/material/styles";
 interface FormData {
   contestId: string | null;
   name: string | null;
-  tasks: object | null;
+  tasks: string | null;
   year: number | null;
+}
+
+interface Contest {
+  contest_id: string;
+  name: string;
+  tasks: object;
+  year: number;
 }
 
 const InputField = styled(TextField)({
@@ -25,7 +32,7 @@ const InputField = styled(TextField)({
 });
 
 const ManageContests: React.FC = () => {
-  const [contests, setContests] = useState([]);
+  const [contests, setContests] = useState<Contest[]>([]);
   const [formData, setFormData] = useState<FormData>({
     contestId: null,
     name: null,
@@ -56,21 +63,6 @@ const ManageContests: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target) {
-        setFormData({
-          ...formData,
-          tasks: JSON.parse(event.target.result as string),
-        });
-      }
-    };
-    if (e.target.files && e.target.files.length > 0) {
-      reader.readAsText(e.target.files[0]);
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -81,7 +73,7 @@ const ManageContests: React.FC = () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: formData.name,
-            tasks: formData.tasks,
+            tasks: JSON.parse(formData.tasks || ""),
             year: formData.year,
           }),
         }
@@ -97,22 +89,21 @@ const ManageContests: React.FC = () => {
       console.error(error);
       setErrorMessage("Error adding contest");
     }
-  };
-  
+  };  
 
   const handleEdit = (contest: any) => {
     setFormData({
       contestId: contest.contest_id,
       name: contest.name,
-      tasks: contest.tasks,
+      tasks: JSON.stringify(contest.tasks),
       year: contest.year,
     });
-  };  
+  };
 
   const handleDelete = async (contestId: string) => {
     try {
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b", //insertContest function
+        "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b", //deleteContest function
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -134,7 +125,31 @@ const ManageContests: React.FC = () => {
       {successMessage && <p>{successMessage}</p>}
       {errorMessage && <p>{errorMessage}</p>}
       <form onSubmit={handleSubmit}>
-        {/* ...existing form fields... */}
+        <TextField
+          label="Name"
+          name="name"
+          value={formData.name || ""}
+          onChange={handleChange}
+          fullWidth
+          variant="outlined"
+        />
+        <TextField
+          label="Tasks"
+          name="tasks"
+          value={formData.tasks || ""}
+          onChange={handleChange}
+          fullWidth
+          variant="outlined"
+        />
+        <TextField
+          label="Year"
+          name="year"
+          type="number"
+          value={formData.year || ""}
+          onChange={handleChange}
+          fullWidth
+          variant="outlined"
+        />
         <Button variant="contained" type="submit">
           {formData.contestId ? "Update Contest" : "Add Contest"}
         </Button>
@@ -145,17 +160,29 @@ const ManageContests: React.FC = () => {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Year</TableCell>
+              <TableCell>Tasks</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {contests.map((contest: any) => (
+            {contests.map((contest) => (
               <TableRow key={contest.contest_id}>
                 <TableCell>{contest.name}</TableCell>
                 <TableCell>{contest.year}</TableCell>
+                <TableCell>{JSON.stringify(contest.tasks)}</TableCell>
                 <TableCell>
-                  <Button onClick={() => handleEdit(contest)}>Edit</Button>
-                  <Button onClick={() => handleDelete(contest.contest_id)}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleEdit(contest)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDelete(contest.contest_id)}
+                  >
                     Delete
                   </Button>
                 </TableCell>
