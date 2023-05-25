@@ -1,9 +1,9 @@
+import React, { useState, useMemo, useEffect } from "react";
 import styles from "../styles/tables.module.css";
 import indexStyles from "../styles/index.module.css";
 import AppBar from "../components/AppBar1";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
-import { useState, useMemo } from "react";
 
 function calculateTotal(problems) {
   const total = problems.reduce((acc, problem) => acc + parseInt(problem), 0);
@@ -45,6 +45,10 @@ export default function Home(props) {
       };
     });
   }, [props.filteredParticipations, sortConfig]);
+
+  useEffect(() => {
+    setSortConfig({ key: "total", direction: "desc" });
+  }, [sortConfig, props.filteredParticipations]);
 
   const handleSort = (key) => {
     let direction = "asc";
