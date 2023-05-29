@@ -20,21 +20,17 @@ async function registerUser(username, password) {
   return userId;
 }
 
-async function loginUser(username) {
-  console.log("Calling loginUser function"); // Log function call
-
+async function loginUser(username, password) {
   const query = `
     SELECT password FROM user
-    WHERE username = '${username}'
+    WHERE username = ? LIMIT 1
   `;
 
   let storedPassword;
 
   await driver.tableClient.withSession(async (session) => {
     try {
-      const result = await session.executeQuery(query);
-      console.log("Query execution successful"); // Log query execution success
-
+      const result = await session.executeQuery(query, [username]);
       const resultSets = result.resultSets;
       const resultSet = resultSets[0];
       const rows = resultSet.rows;
@@ -42,12 +38,10 @@ async function loginUser(username) {
       if (rows.length > 0) {
         const passwordColumn = rows[0].items[0];
         storedPassword = passwordColumn.textValue;
-        console.log("Stored password:", storedPassword); // Log the storedPassword value
-      } else {
-        console.log("No password found for the given username.");
       }
     } catch (error) {
-      console.error("Error executing query:", error); // Log any error that occurred during query execution
+      console.error("Error executing query:", error);
+      throw new Error("Error executing query");
     }
   });
 
@@ -55,6 +49,8 @@ async function loginUser(username) {
 }
 
 exports.handler = async (event, context) => {
+  console.log("Received request:", event);
+
   const { httpMethod, headers, body } = event;
 
   const response = {
@@ -67,12 +63,14 @@ exports.handler = async (event, context) => {
   };
 
   if (httpMethod === "OPTIONS") {
+    console.log("Preflight request");
     return response;
   }
 
   await driver.ready;
 
   if (!body || body.trim() === "") {
+    console.log("Empty request body");
     response.statusCode = 400;
     response.body = "Empty request body";
     return response;
@@ -81,6 +79,7 @@ exports.handler = async (event, context) => {
   const { action, username, password } = JSON.parse(body);
 
   if (!username || !password) {
+    console.log("Username and password required");
     response.statusCode = 400;
     response.body = "Username and password required";
     return response;
@@ -91,12 +90,13 @@ exports.handler = async (event, context) => {
       const userId = await registerUser(username, password);
       response.body = JSON.stringify({ userId });
       return response;
-    } else if (action === "login") {
-      const storedPassword = await loginUser(username);
+    } else if (action === "signIn") {
+      const storedPassword = await loginUser(username, password);
       if (storedPassword === password) {
-        response.body = JSON.stringify({ success: true, password: storedPassword });
+        response.body = JSON.stringify({ success: true });
         return response;
       } else {
+        console.log("Invalid username or password");
         response.statusCode = 401;
         response.body = JSON.stringify({
           success: false,
@@ -105,11 +105,13 @@ exports.handler = async (event, context) => {
         return response;
       }
     } else {
+      console.log("Invalid action");
       response.statusCode = 400;
       response.body = "Invalid action";
       return response;
     }
   } catch (error) {
+    console.error("Internal server error:", error);
     response.statusCode = 500;
     response.body = "Internal server error";
     return response;

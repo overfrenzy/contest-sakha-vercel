@@ -1,49 +1,81 @@
-import React, { useState } from "react";
+import { getCsrfToken } from "next-auth/react";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
 
-function LoginForm() {
+export default function LoginForm({ csrfToken }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [notification, setNotification] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Send a request to your Yandex Cloud Function for login
-    const response = await fetch("/api/auth", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        action: "login",
-        username,
-        password,
-      }),
-    });
+    try {
+      const response = await fetch("/api/auth/callback/credentials", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username,
+          password,
+          action: "signIn",
+        }),
+      });
 
-    if (response.ok) {
-      setNotification("User logged in successfully");
-      console.log("User logged in successfully");
-      router.push("/"); // Redirect to the main page
-    } else {
-      setNotification("Invalid username or password");
-      console.error("Error logging in");
+      if (response.ok) {
+        // Redirect to the main page
+        router.push("/");
+      } else {
+        // Handle login error
+        console.error("Login failed");
+      }
+    } catch (error) {
+      // Handle network or server error
+      console.error("An error occurred:", error);
     }
   };
 
   return (
-    <div>
-      {notification && <p>{notification}</p>}
-      <form onSubmit={handleSubmit}>
-        <label>Username:</label>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <label>Password:</label>
-        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
+      <label>
+        Username:
+        <input
+          name="username"
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+      </label>
+      <label>
+        Password:
+        <input
+          name="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+      </label>
+      <button type="submit">Sign in</button>
+    </form>
   );
 }
 
-export default LoginForm;
+export async function getServerSideProps(context) {
+  const csrfToken = await getCsrfToken(context);
+
+  if (!csrfToken) {
+    return {
+      redirect: {
+        destination: "/error",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      csrfToken,
+    },
+  };
+}

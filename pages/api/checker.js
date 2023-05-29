@@ -1,5 +1,6 @@
 import { spawn } from 'child_process';
-import yauzl from 'yauzl';
+import { Buffer } from 'buffer';
+import unzipper from 'unzipper';
 import FormData from 'form-data';
 import fetch from 'node-fetch';
 import nc from 'next-connect';
@@ -94,42 +95,40 @@ async function handleAPIRequest(request) {
   return { status: 200, body: testResults.join('\n') };
 }
 
+// Extract files from the database
 async function extractFilesFromDatabase(archiveName) {
   const url = `https://storage.yandexcloud.net/contest-bucket/${archiveName}`;
 
   const response = await fetch(url);
 
   if (response.ok) {
-    const data = new Uint8Array(await response.arrayBuffer());
+    const data = await response.buffer();
 
-    return new Promise((resolve, reject) => {
-      let extractedFiles = {};
+    const extractedFiles = {};
 
-      yauzl.fromBuffer(data, { lazyEntries: true }, (err, zipfile) => {
-        if (err) reject(err);
-
-        zipfile.readEntry();
-
-        zipfile.on('entry', entry => {
-          const fileName = entry.fileName;
-          if (fileName === 'check.exe' || fileName.match(/^tests\/\d{2}\.file$/) || fileName.match(/^tests\/\d{2}\.a$/)) {
-            zipfile.openReadStream(entry, (err, readStream) => {
-              if (err) throw err;
-              const chunks = [];
-              readStream.on('data', chunk => chunks.push(chunk));
-              readStream.on('end', () => {
-                extractedFiles[fileName] = Buffer.concat(chunks);
-                zipfile.readEntry();
-              });
+    await unzipper.Open.buffer(data)
+      .then((archive) => {
+        const filePromises = [];
+        archive.files.forEach((file) => {
+          const fileName = file.path;
+          if (
+            fileName === 'check.exe' ||
+            fileName.match(/^tests\/\d{2}\.file$/) ||
+            fileName.match(/^tests\/\d{2}\.a$/)
+          ) {
+            const filePromise = file.buffer().then((buffer) => {
+              extractedFiles[fileName] = buffer;
             });
-          } else {
-            zipfile.readEntry();
+            filePromises.push(filePromise);
           }
         });
-
-        zipfile.on('end', () => resolve(extractedFiles));
+        return Promise.all(filePromises);
+      })
+      .catch((error) => {
+        throw new Error(`Failed to extract files from ${archiveName}: ${error}`);
       });
-    });
+
+    return extractedFiles;
   } else {
     throw new Error(`Failed to fetch ${archiveName} from Yandex Object Storage`);
   }
