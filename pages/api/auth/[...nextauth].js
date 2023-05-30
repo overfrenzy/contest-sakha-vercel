@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { OAuth2Client } from "google-auth-library";
 import fetch from "node-fetch";
-import { jwtVerify } from "jose";
 
 const authOptions = {
   providers: [
@@ -16,38 +16,20 @@ const authOptions = {
   callbacks: {
     async signIn({ account, profile }) {
       if (account.provider === "google") {
-        // console.log("account:", account);
-        // console.log("profile:", profile);
+        console.log("account:", account);
+        console.log("profile:", profile);
         // console.log("account.id_token:", account.id_token);
         try {
-          // Fetch public keys from Google's JWKS endpoint
-          const jwksResponse = await fetch(
-            "https://www.googleapis.com/oauth2/v3/certs"
-          );
-          const jwks = await jwksResponse.json();
-          console.log("JWKS Response:", jwks);
-          // kid should match on of the keys in the JWKS response
+          const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+          const ticket = await client.verifyIdToken({
+            idToken: account.id_token,
+            audience: process.env.GOOGLE_CLIENT_ID,
+          });
 
-          // Find the key with a matching key ID (kid)
-          const key = jwks.keys.find((key) => key.kid === account.id_token.kid);
-          //console.log("Key:", key);
+          const payload = ticket.getPayload();
+          const email = payload.email;
+          const name = payload.name;
 
-          if (!key) {
-            console.error("Unable to find key for verification");
-            return false;
-          }
-
-          const { payload, protectedHeader } = await jwtVerify(
-            account.id_token,
-            key,
-            {
-              issuer: profile.iss,
-              audience: profile.aud,
-            }
-          );
-
-          // Access the decoded token data
-          const { email, name } = payload;
           const user = {
             email,
             name,
@@ -95,7 +77,7 @@ const authOptions = {
           console.error("Error verifying id_token:", error);
         }
 
-        return true;
+        return false;
       }
     },
     async signOut({ account, session }) {},

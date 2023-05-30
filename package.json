@@ -28,6 +28,7 @@
     "faker": "^6.6.6",
     "form-data": "^4.0.0",
     "fs": "^0.0.1-security",
+    "google-auth-library": "^8.8.0",
     "http": "^0.0.1-security",
     "isomorphic-unfetch": "^4.0.2",
     "jose": "^4.14.4",
