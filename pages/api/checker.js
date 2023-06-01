@@ -1,3 +1,4 @@
+/*
 import { spawn } from 'child_process';
 import { Buffer } from 'buffer';
 import unzipper from 'unzipper';
@@ -153,6 +154,7 @@ console.log(handler);
 
 
 export default handler;
+*/
 
 //Vercel doesn't support the child_process.spawn() method for running executables like g++, how to compile a programm is a question
 //use third party service? Compiler Explorer, Judge0
