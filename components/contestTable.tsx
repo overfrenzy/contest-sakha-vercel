@@ -1,13 +1,13 @@
-import React from "react";
-import styles from "../styles/tables.module.css";
-import { useTheme } from "@mui/material/styles";
+import React from 'react';
+import styles from '../styles/tables.module.css';
+import { useTheme } from '@mui/material/styles';
 
 function calculateTotal(problems) {
   const total = problems.reduce((acc, problem) => acc + parseInt(problem), 0);
   return `${total}/${problems.length * 100}`;
 }
 
-function ContestTable({ filteredParticipations }) {
+function ContestTable({ filteredParticipations, sortConfig, onSort }) {
   const theme = useTheme();
 
   const participations = React.useMemo(() => {
@@ -21,7 +21,7 @@ function ContestTable({ filteredParticipations }) {
         b.tasksdone.problems1.reduce((s, v) => (s += parseInt(v, 10)), 0) +
         b.tasksdone.problems2.reduce((s, v) => (s += parseInt(v, 10)), 0);
 
-      return sortConfig.direction === "asc" ? totalA - totalB : totalB - totalA;
+      return sortConfig.direction === 'asc' ? totalA - totalB : totalB - totalA;
     });
 
     return sortedParticipations.map((participation, index) => {
@@ -48,13 +48,13 @@ function ContestTable({ filteredParticipations }) {
 
   const generateHeaders = (length) => {
     if (length === 3) {
-      return ["1", "2", "3"];
+      return ['1', '2', '3'];
     } else if (length >= 4) {
       return [
-        "a",
-        "b",
-        "c",
-        "d",
+        'a',
+        'b',
+        'c',
+        'd',
         ...Array.from({ length: length - 4 }, (_, i) =>
           String.fromCharCode(101 + i)
         ),
@@ -71,9 +71,9 @@ function ContestTable({ filteredParticipations }) {
   };
 
   const columnTotals = [
-    "", // Empty cell for the first column
-    "", // Empty cell for the second column
-    "", // Empty cell for the third column
+    '', // Empty cell for the first column
+    '', // Empty cell for the second column
+    '', // Empty cell for the third column
     ...headers1.map((header, index) => {
       const values = participations.map((participation) =>
         parseInt(participation.problems1[index] || 0, 10)
@@ -92,71 +92,41 @@ function ContestTable({ filteredParticipations }) {
     <table className={styles.table}>
       <thead>
         <tr>
-          <th rowSpan={2}>№</th>
-          <th rowSpan={2}>ФИО участника / Full name</th>
-          <th rowSpan={2}>Страна / Country</th>
-          <th colSpan={maxProblems1Length}>
-            Задания 1 дня / First day problems
-          </th>
-          <th rowSpan={2}>Итого1 / Total1</th>
-          <th colSpan={maxProblems2Length}>
-            Задания 2 дня / Second day problems
-          </th>
-          <th rowSpan={2}>Итого2 / Total2</th>
-          <th
-            rowSpan={2}
-            onClick={() => handleSort("total")}
-            style={{
-              backgroundColor: theme.palette.primary.main,
-              color: "#fff",
-              cursor: "pointer",
-            }}
-          >
-            Итого / Total
-          </th>
-          <th rowSpan={2}>Место / Place</th>
-        </tr>
-        <tr>
-          {headers1.map((header, i) => (
-            <th key={i}>{header}</th>
+          <th>№</th>
+          <th>Название премии</th>
+          <th>Фамилия, имя</th>
+          <th>Страна</th>
+          {headers1.map((header) => (
+            <th key={header}>{header}</th>
           ))}
-          {headers2.map((header, i) => (
-            <th key={i}>{header}</th>
+          {headers2.map((header) => (
+            <th key={header}>{header}</th>
           ))}
+          <th>Всего</th>
         </tr>
       </thead>
       <tbody>
-        {participations.map((participation, i) => (
-          <tr key={i.toString()}>
-            <td>{i + 1}</td>
+        {participations.map((participation, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>{participation.awardName}</td>
             <td>{participation.name}</td>
             <td>{participation.country}</td>
-            {participation.problems1.map((problem, idx) => (
-              <td key={idx} className={styles.value}>
-                {parseInt(problem, 10)}
-              </td>
+            {headers1.map((header, index) => (
+              <td key={index}>{participation.problems1[index]}</td>
             ))}
-            <td className={styles.value}>
-              {participation.problems1.reduce(
-                (s, v) => (s += parseInt(v, 10)),
-                0
-              )}
-            </td>
-            {participation.problems2.map((problem, idx) => (
-              <td key={idx} className={styles.value}>
-                {parseInt(problem, 10)}
-              </td>
+            {headers2.map((header, index) => (
+              <td key={index}>{participation.problems2[index]}</td>
             ))}
-            <td className={styles.value}>
-              {participation.problems2.reduce(
-                (s, v) => (s += parseInt(v, 10)),
-                0
-              )}
-            </td>
-            <td className={styles.value}>{participation.total}</td>
-            <td className={styles.value}>{participation.awardName}</td>
+            <td>{participation.total}</td>
           </tr>
         ))}
+        <tr className={styles.columnTotals}>
+          <td colSpan={4}>Всего задач:</td>
+          {columnTotals.map((total, index) => (
+            <td key={index}>{total}</td>
+          ))}
+        </tr>
       </tbody>
     </table>
   );

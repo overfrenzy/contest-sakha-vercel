@@ -30,7 +30,7 @@ export default function Home(props) {
           <ContestTable
             filteredParticipations={props.filteredParticipations}
             sortConfig={sortConfig}
-            onSort={handleSort}
+            onSort={handleSort} // Pass the handleSort function as a prop
           />
         </Grid>
       </Grid>
