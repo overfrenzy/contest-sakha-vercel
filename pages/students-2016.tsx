@@ -1,7 +1,7 @@
 import fsPromises from 'fs/promises';
 import path from 'path';
 import { Container, Grid, Paper, Typography, Box } from '@mui/material';
-import AppBar from './components/AppBar2';
+import AppBar from '../components/AppBar2';
 import Image from 'next/image';
 import styles from '../styles/index.module.css';
 

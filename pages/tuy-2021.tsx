@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import ContestTable from './components/ContestTable';
-import AppBar from './components/AppBar1';
+import ContestTable from '../components/ContestTable';
+import AppBar from '../components/AppBar1';
 import indexStyles from '../styles/index.module.css';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';

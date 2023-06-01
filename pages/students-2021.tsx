@@ -1,5 +1,5 @@
 import { Container, Typography } from "@mui/material";
-import ParticipantTable from "./components/ParticipantTable";
+import ParticipantTable from "../components/ParticipantTable";
 
 export default function Home({ students }) {
   return (

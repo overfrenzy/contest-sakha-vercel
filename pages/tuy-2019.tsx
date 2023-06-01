@@ -1,6 +1,6 @@
 import styles from "../styles/tables.module.css";
 import indexStyles from "../styles/index.module.css";
-import AppBar from "./components/AppBar1";
+import AppBar from "../components/AppBar1";
 import Grid from "@mui/material/Grid";
 import { useTheme } from "@mui/material/styles";
 import { useState, useMemo } from "react";
