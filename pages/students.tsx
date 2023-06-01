@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import styles from "../styles/index.module.css";
 import Container from "@mui/material/Container";
-import AppBar from "../components/AppBar2";
+import AppBar from "./components/AppBar2";
 
 export default function HomePage() {
   const theme = useTheme();

@@ -6,7 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import styles from "../styles/tables.module.css";
-import AppBar from "../components/AppBar1";
+import AppBar from "./components/AppBar1";
 import Container from "@mui/material/Container";
 import fsPromises from "fs/promises";
 import path from "path";

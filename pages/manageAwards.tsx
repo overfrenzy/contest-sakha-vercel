@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useProtectedPage } from "../components/protectedPage";
+import { useProtectedPage } from "./components/protectedPage";
 import {
   TextField,
   Button,
