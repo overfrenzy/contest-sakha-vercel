@@ -6,9 +6,6 @@ export default function ParticipantTable({ students }) {
   return (
     <div className={styles.content}>
       <Container sx={{ marginY: 3 }}>
-        <Typography variant="h2" component="h2">
-          Участники
-        </Typography>
         <Grid container spacing={2} alignItems="stretch">
           {students.map((elem, i) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={i.toString()}>
