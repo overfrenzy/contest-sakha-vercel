@@ -35,7 +35,7 @@ export const useProtectedPage = () => {
 
     if (sessionStatus === "unauthenticated") {
       console.log("User is not authenticated, redirecting to login page");
-      router.replace("/mainPage");
+      router.replace("/profilePage");
     } else if (sessionStatus === "authenticated") {
       checkUserPermissions();
     }

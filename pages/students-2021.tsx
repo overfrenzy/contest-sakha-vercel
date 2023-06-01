@@ -1,6 +1,7 @@
 import { Container, Typography } from "@mui/material";
 import ParticipantTable from "../components/participantTable";
 import { useState, useEffect } from "react";
+import AppBar from '../components/AppBar2';
 
 export default function Students2021() {
   const [students, setStudents] = useState([]);
@@ -25,6 +26,8 @@ export default function Students2021() {
   }, []);
 
   return (
+    <>
+    <AppBar />
     <div>
       <Container sx={{ marginY: 3 }}>
         <Typography variant="h2" component="h2">
@@ -33,5 +36,6 @@ export default function Students2021() {
         <ParticipantTable students={students} />
       </Container>
     </div>
+    </>
   );
 }
