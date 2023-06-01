@@ -15,11 +15,11 @@ export default function Home({ students }) {
 }
 
 export async function getStaticProps() {
-  const archiveName = "tuy-2021"; // Change the archive name here
-  const contestName = "TUY-2021"; // Change the contest name here
+  const archiveName = encodeURIComponent("tuy-2021");
+  const contestName = encodeURIComponent("TUY-2021");
 
   const response = await fetch(
-    `/api/fetchStudents?archiveName=${archiveName}&contestName=${contestName}`
+    `/api/fetchParticipants?archiveName=${archiveName}&contestName=${contestName}`
   );
   const data = await response.json();
 

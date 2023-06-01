@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../styles/tables.module.css';
 import { useTheme } from '@mui/material/styles';
 
@@ -9,6 +9,14 @@ function calculateTotal(problems) {
 
 function ContestTable({ filteredParticipations, sortConfig, onSort }) {
   const theme = useTheme();
+
+  const handleSort = (key) => {
+    let direction = 'asc';
+    if (sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    onSort(key, direction);
+  };
 
   const participations = React.useMemo(() => {
     const sortedParticipations = [...filteredParticipations];
@@ -92,41 +100,71 @@ function ContestTable({ filteredParticipations, sortConfig, onSort }) {
     <table className={styles.table}>
       <thead>
         <tr>
-          <th>№</th>
-          <th>Название премии</th>
-          <th>Фамилия, имя</th>
-          <th>Страна</th>
-          {headers1.map((header) => (
-            <th key={header}>{header}</th>
+          <th rowSpan={2}>№</th>
+          <th rowSpan={2}>ФИО участника / Full name</th>
+          <th rowSpan={2}>Страна / Country</th>
+          <th colSpan={maxProblems1Length}>
+            Задания 1 дня / First day problems
+          </th>
+          <th rowSpan={2}>Итого1 / Total1</th>
+          <th colSpan={maxProblems2Length}>
+            Задания 2 дня / Second day problems
+          </th>
+          <th rowSpan={2}>Итого2 / Total2</th>
+          <th
+            rowSpan={2}
+            onClick={() => handleSort('total')}
+            style={{
+              backgroundColor: theme.palette.primary.main,
+              color: '#fff',
+              cursor: 'pointer',
+            }}
+          >
+            Итого / Total
+          </th>
+          <th rowSpan={2}>Место / Place</th>
+        </tr>
+        <tr>
+          {headers1.map((header, i) => (
+            <th key={i}>{header}</th>
           ))}
-          {headers2.map((header) => (
-            <th key={header}>{header}</th>
+          {headers2.map((header, i) => (
+            <th key={i}>{header}</th>
           ))}
-          <th>Всего</th>
         </tr>
       </thead>
       <tbody>
-        {participations.map((participation, index) => (
-          <tr key={index}>
-            <td>{index + 1}</td>
-            <td>{participation.awardName}</td>
+        {participations.map((participation, i) => (
+          <tr key={i.toString()}>
+            <td>{i + 1}</td>
             <td>{participation.name}</td>
             <td>{participation.country}</td>
-            {headers1.map((header, index) => (
-              <td key={index}>{participation.problems1[index]}</td>
+            {participation.problems1.map((problem, idx) => (
+              <td key={idx} className={styles.value}>
+                {parseInt(problem, 10)}
+              </td>
             ))}
-            {headers2.map((header, index) => (
-              <td key={index}>{participation.problems2[index]}</td>
+            <td className={styles.value}>
+              {participation.problems1.reduce(
+                (s, v) => (s += parseInt(v, 10)),
+                0
+              )}
+            </td>
+            {participation.problems2.map((problem, idx) => (
+              <td key={idx} className={styles.value}>
+                {parseInt(problem, 10)}
+              </td>
             ))}
-            <td>{participation.total}</td>
+            <td className={styles.value}>
+              {participation.problems2.reduce(
+                (s, v) => (s += parseInt(v, 10)),
+                0
+              )}
+            </td>
+            <td className={styles.value}>{participation.total}</td>
+            <td className={styles.value}>{participation.awardName}</td>
           </tr>
         ))}
-        <tr className={styles.columnTotals}>
-          <td colSpan={4}>Всего задач:</td>
-          {columnTotals.map((total, index) => (
-            <td key={index}>{total}</td>
-          ))}
-        </tr>
       </tbody>
     </table>
   );
