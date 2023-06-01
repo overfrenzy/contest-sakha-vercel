@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ContestTable from '../components/ContestTable';
+import ContestTable from '../components/contestTable';
 import AppBar from '../components/AppBar1';
 import indexStyles from '../styles/index.module.css';
 import Grid from '@mui/material/Grid';
