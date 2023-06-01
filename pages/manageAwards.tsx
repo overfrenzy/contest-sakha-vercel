@@ -50,7 +50,7 @@ import { styled } from "@mui/material/styles";
     const fetchAwards = async () => {
       try {
         const response = await fetch(
-          "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f"
+          "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f" //fetch-db function
         );
         const data = await response.json();
         setAwards(data.awards);
@@ -67,7 +67,7 @@ import { styled } from "@mui/material/styles";
 
       try {
         const response = await fetch(
-          "https://functions.yandexcloud.net/d4esum4t3768sp096apb",
+          "https://functions.yandexcloud.net/d4esum4t3768sp096apb", //insertAward function
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
