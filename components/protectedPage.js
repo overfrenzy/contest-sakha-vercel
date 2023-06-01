@@ -37,15 +37,34 @@ export const useProtectedPage = () => {
       console.log("User is not authenticated, redirecting to login page");
       router.replace("/profilePage");
     } else if (sessionStatus === "authenticated") {
-      checkUserPermissions();
-    }
+      /*
+      // Verify the Google ID token
+      const verifyToken = async () => {
+        try {
+          const response = await fetch("/api/verifyGoogleToken"); // Path to your middleware endpoint
+          const data = await response.json();
 
+          if (response.ok) {
+            console.log("Token verification successful");
+            checkUserPermissions(); // Proceed to check user permissions
+          } else {
+            console.log("Token verification failed");
+            router.replace("/unauthorized"); // Redirect to unauthorized page
+          }
+        } catch (error) {
+          console.log("Failed to verify token:", error);
+          // Handle the error or redirect to an error page
+        }
+      };
+      verifyToken();
+      */
+    }
   }, [session, sessionStatus, router]);
 
   if (sessionStatus === "loading") {
     console.log("Checking session, rendering loading state");
     return <div>Loading...</div>;
   }
-  
+
   return null;
 };
