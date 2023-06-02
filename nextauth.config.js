@@ -60,10 +60,9 @@ const callbacks = {
           } else {
             user.permissions = "user";
           }
-          console.log("start sending POST");
           // Save the user to the Yandex Cloud Function table using POST
           await fetch(
-            "https://functions.yandexcloud.net/d4e3ep6u8gc95k9qi64u",
+            "https://functions.yandexcloud.net/d4e1d50qsjpjf2tk2fkv",
             {
               method: "POST",
               headers: {
@@ -72,8 +71,6 @@ const callbacks = {
               body: JSON.stringify(user),
             }
           );
-          const body = JSON.stringify(user);
-          console.log("successfully sent POST:", body);
 
           return true;
         } else {

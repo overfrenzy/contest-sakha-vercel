@@ -14,10 +14,11 @@ async function fetchUsers() {
       SELECT * FROM user;
     `);
     users = usersResult.resultSets[0].rows.map((row) => {
-      const email = row.items[0].textValue;
-      const name = row.items[1].textValue;
-      const permissions = row.items[2].textValue;
-      return { email, name, permissions };
+      const email = row.items[0]?.bytesValue?.toString("utf8") || "";
+      const id_token = row.items[1]?.bytesValue?.toString("utf8") || "";
+      const name = row.items[2].textValue;
+      const permissions = row.items[3]?.bytesValue?.toString("utf8") || "";
+      return { email, id_token, name, permissions };
     });
   });
 
@@ -27,11 +28,11 @@ async function fetchUsers() {
 }
 
 // Insert users data
-async function insertUser(name, email) {
+async function insertUser(id_token, name, email) {
   const query = `
-    INSERT INTO user (name, email)
-    VALUES ("${name}", "${email}")
-  `;
+  UPSERT INTO user (idToken, name, email)
+  VALUES ("${id_token}", "${name}", "${email}")
+`;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
   });
@@ -65,7 +66,7 @@ exports.handler = async (event, context) => {
   }
 
   if (event.httpMethod === "POST") {
-    if (!event.body || event.body.trim() === "") {
+    if (!event.body || typeof event.body !== "string" || event.body.trim() === "") {
       return {
         statusCode: 400,
         headers: {
@@ -75,9 +76,9 @@ exports.handler = async (event, context) => {
       };
     }
 
-    let body;
+    let parsedBody;
     try {
-      body = JSON.parse(event.body);
+      parsedBody = JSON.parse(event.body);
     } catch (error) {
       return {
         statusCode: 400,
@@ -88,9 +89,9 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const { name, email } = body;
+    const { id_token, name, email } = parsedBody;
 
-    await insertUser(name, email);
+    await insertUser(id_token, name, email);
 
     return {
       statusCode: 200,

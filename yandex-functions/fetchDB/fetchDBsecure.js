@@ -1,12 +1,45 @@
+const { OAuth2Client } = require("google-auth-library");
 const { Driver, getCredentialsFromEnv, getLogger } = require("ydb-sdk");
+
 const logger = getLogger({ level: "debug" });
 const endpoint = "grpcs://ydb.serverless.yandexcloud.net:2135";
 const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
 const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
+async function checkPermissions(email) {
+  let idToken = null;
+
+  await driver.tableClient.withSession(async (session) => {
+    // Check if email exists in the database
+    const userResult = await session.executeQuery(`
+      SELECT idToken FROM user WHERE email = '${email}';
+    `);
+
+    if (userResult.resultSets[0].rows.length === 0 || !idToken) {
+      throw new Error("User not found1");
+    }
+
+    idToken =
+      userResult.resultSets[0].rows[0].items[0]?.bytesValue?.toString("utf8") ||
+      "";
+  });
+
+  if (!idToken) {
+    throw new Error("User not found2");
+  }
+
+  return idToken;
+}
+
 async function fetchData() {
-  let countries, schools, participations, awards, contests, schoolnames;
+  let countries,
+    schools,
+    participations,
+    awards,
+    contests,
+    schoolnames,
+    participants;
 
   await driver.tableClient.withSession(async (session) => {
     // Fetch countries data
@@ -111,9 +144,81 @@ async function fetchData() {
 }
 
 exports.handler = async (event, context) => {
-  const data = await fetchData();
-  return {
-    statusCode: 200,
-    body: JSON.stringify(data),
-  };
+  try {
+    if (event.httpMethod === "OPTIONS") {
+      return {
+        statusCode: 200,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Email, Audience",
+          "Access-Control-Max-Age": "86400",
+        },
+        body: "",
+      };
+    }
+
+    const clientIdHeader = event.headers["Audience"];
+    if (!clientIdHeader) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Missing clientid header" }),
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      };
+    }
+
+    const emailHeader = event.headers["Email"];
+    if (!emailHeader) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: "Missing email header" }),
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+      };
+    }
+
+    const clientId = clientIdHeader;
+    const email = emailHeader;
+
+    // Verify the ID token
+    const client = new OAuth2Client(clientId);
+    const idToken = await checkPermissions(email);
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: clientId,
+    });
+    const data = await fetchData();
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data),
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Email, Audience",
+        "Access-Control-Max-Age": "86400",
+      },
+    };
+  } catch (error) {
+    let statusCode = 403;
+    let errorMessage = "Unauthorized";
+    if (error.message === "User not found") {
+      statusCode = 404;
+      errorMessage = "User not found";
+    } else if (error.message === "Insufficient permissions") {
+      statusCode = 403;
+      errorMessage = "Insufficient permissions";
+    }
+
+    return {
+      statusCode,
+      body: JSON.stringify({ error: errorMessage }),
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    };
+  }
 };
