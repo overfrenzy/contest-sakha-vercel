@@ -8,7 +8,7 @@ export default function MainPage() {
 
   const fetchUserData = useCallback(async () => {
     try {
-      const url = 'https://functions.yandexcloud.net/d4e3ep6u8gc95k9qi64u'; // auth function
+      const url = 'https://functions.yandexcloud.net/d4e1d50qsjpjf2tk2fkv'; // auth function
       const response = await fetch(url);
       const data = await response.json();
 

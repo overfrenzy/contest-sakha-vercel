@@ -1,12 +1,14 @@
+const { OAuth2Client } = require('google-auth-library');
 const { Driver, getCredentialsFromEnv, getLogger } = require("ydb-sdk");
+
 const logger = getLogger({ level: "debug" });
 const endpoint = "grpcs://ydb.serverless.yandexcloud.net:2135";
 const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
 const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
-async function fetchData() {
-  let countries, schools, participations, awards, contests, schoolnames;
+async function fetchData(email) {
+  let countries, schools, participations, awards, contests, schoolnames, participants;
 
   await driver.tableClient.withSession(async (session) => {
     // Fetch countries data
@@ -97,23 +99,53 @@ async function fetchData() {
       const school_id = row.items[4]?.bytesValue?.toString("utf8") || "";
       return { country_id, name, participant_id, participation_id, school_id };
     });
-  });
 
-  return {
-    countries,
-    schools,
-    participations,
-    awards,
-    contests,
-    schoolnames,
-    participants,
-  };
+    // Check if email exists in the database
+    const user = user.find((user) => user.email === email);
+
+    // Verify user permissions
+    if (user && user.permissions === 'admin') {
+      return {
+        countries,
+        schools,
+        participations,
+        awards,
+        contests,
+        schoolnames,
+        participants,
+      };
+    } else {
+      throw new Error('Unauthorized');
+    }
+  });
 }
 
 exports.handler = async (event, context) => {
-  const data = await fetchData();
-  return {
-    statusCode: 200,
-    body: JSON.stringify(data),
-  };
+  const idToken = event.headers['Authorization'].split('Bearer ')[1];
+
+  try {
+    // Verify the ID token
+    const clientId = 'your-client-id'; // Replace with your actual client ID
+    const client = new OAuth2Client(clientId);
+
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: clientId,
+    });
+
+    const email = ticket.getPayload().email;
+
+    // Fetch data and check user authorization
+    const data = await fetchData(email);
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data),
+    };
+  } catch (error) {
+    return {
+      statusCode: 403,
+      body: JSON.stringify({ error: 'Unauthorized' }),
+    };
+  }
 };
