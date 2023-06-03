@@ -10,17 +10,19 @@ const providers = [
 ];
 
 const callbacks = {
+  async jwt({ token, user, account }) {
+    if (account) {
+      token.id_token = account.id_token;
+    }
+    return token;
+  },
   async session({ session, token }) {
-    // Add the id_token and audience to the session object
+    session.audience = process.env.GOOGLE_CLIENT_ID;
     session.id_token = token.id_token;
-    session.audience = process.env.GOOGLE_CLIENT_ID; // Set the audience value
     return session;
   },
-  async signIn({ account, profile }) {
+  async signIn({ account, token }) {
     if (account.provider === "google") {
-      //console.log("account:", account);
-      //console.log("profile:", profile);
-      //console.log("account.id_token:", account.id_token);
       try {
         const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
         const ticket = await client.verifyIdToken({
@@ -31,10 +33,8 @@ const callbacks = {
         const payload = ticket.getPayload();
         const email = payload.email;
         const name = payload.name;
-        const id_token = account.id_token;
 
         const user = {
-          id_token,
           name,
           email,
         };
@@ -95,8 +95,9 @@ const options = {
     updateAge: 24 * 60 * 60, // 24 hours
     cookies: {
       session: {
-        secure: false,
-        name: process.env.COOKIE_SECRET,
+        secure: process.env.NODE_ENV === "production", // Set to true in production
+        sameSite: "strict",
+        path: "/",
       },
     },
   },

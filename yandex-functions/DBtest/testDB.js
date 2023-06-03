@@ -1,3 +1,5 @@
+// old unecessary function
+
 const { Driver, getCredentialsFromEnv, getLogger } = require('ydb-sdk');
 const { router } = require('yandex-cloud-functions-router');
 

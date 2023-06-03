@@ -1,12 +1,14 @@
 import React from "react";
 import { Card, CardContent, Grid } from "@mui/material";
-import InsertAward from "./formAward";
-import InsertContest from "./formContest";
-import InsertCountry from "./formCountry";
-import InsertSchoolName from "./formSchoolName";
-import InsertParticipant from "./formParticipant";
+import InsertAward from "../components/forms/formAward";
+import InsertContest from "../components/forms/formContest";
+import InsertCountry from "../components/forms/formCountry";
+import InsertSchoolName from "../components/forms/formSchoolName";
+import InsertParticipant from "../components/forms/formParticipant";
+import { useProtectedPage } from "../components/protectedPage";
 
 const App: React.FC = () => {
+  useProtectedPage();
   return (
     <div>
       <Grid container spacing={2} direction="column" alignItems="flex-start" justifyContent="flex-start">

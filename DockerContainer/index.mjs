@@ -10,10 +10,16 @@ import fs from "fs";
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Configure multer middleware for file uploads
 const upload = multer();
 
 app.use(express.json());
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); 
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, X-Archive-Name");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  next();
+});
 
 app.post("/", upload.single("file"), async (req, res) => {
   try {
@@ -27,26 +33,22 @@ app.post("/", upload.single("file"), async (req, res) => {
 
 function startServer() {
   app.listen(port, () => {
-    //console.log(`Server started on port ${port}`); everything works as expected
   });
 }
 
 async function handleAPIRequest(request) {
-  // Check that the request method is POST
   if (request.method !== "POST") {
     return { status: 405, body: "Method not allowed" };
   }
 
-  //console.log("File uploaded"); everything works as expected
+   // Extract the archiveName from the request headers
+   const archiveName = request.headers['x-archive-name'];
 
   // Get the uploaded program file from the POST request
   const form = new FormData();
   form.append("file", request.file.buffer, "testedProgram");
-  //console.log("request.file:", request.file); everything works as expected
-  //console.log("request.file.buffer:", request.file.buffer); everything works as expected
 
   // Extract files from the database
-  const archiveName = "granopodus-26%24windows.zip";
   const extractedFiles = await extractFilesFromDatabase(archiveName);
 
   // Get input and answer files from the extracted files
@@ -64,7 +66,6 @@ async function handleAPIRequest(request) {
   // Create a temporary file for the program
   const programFile = await tmp.file({ postfix: ".cpp" });
   await fs.promises.writeFile(programFile.path, request.file.buffer);
-  //console.log("temporary file 1 created"); file 1 is created
 
   // Compile the program
   const p = spawn("g++", ["-o", `${programFile.path}.out`, programFile.path]);
@@ -72,7 +73,6 @@ async function handleAPIRequest(request) {
     p.on("exit", resolve);
     p.on("error", reject);
   });
-  //console.log("program compiled"); program is compiled
 
   // Run the program with each input file and capture the output
   const programOutputs = [];
@@ -100,7 +100,6 @@ async function handleAPIRequest(request) {
   // Create a temporary file for the test case executable
   const testCaseFile = await tmp.file({ postfix: ".exe" });
   await fs.promises.writeFile(testCaseFile.path, extractedFiles["check.exe"]);
-  //console.log("temporary file 2 created");
 
   // Feed each input/output/answer set to the test case and capture the results
   const testResults = [];
@@ -116,17 +115,15 @@ async function handleAPIRequest(request) {
     );
     testResults.push(testResult);
   }
+
   //console.log("testResult:", testResult);
   //console.log("test case successful"); 
-
-  // Return the test case results as the response
   return { status: 200, body: testResults.join("\n") };
 }
 
 // Extract files from the database
 async function extractFilesFromDatabase(archiveName) {
-  //console.log("Fetching archive from the database:", archiveName); everything works as expected
-  const url = `https://storage.yandexcloud.net/contest-bucket/${archiveName}`;
+  const url = `https://storage.yandexcloud.net/contest-bucket/testCases/${archiveName}`;
 
   const response = await fetch(url);
 
@@ -134,7 +131,6 @@ async function extractFilesFromDatabase(archiveName) {
     const data = await response.buffer();
 
     const extractedFiles = {};
-    //console.log("Extracting files from the archive..."); everything works as expected
 
     await unzipper.Open.buffer(data)
       .then((archive) => {
@@ -143,8 +139,8 @@ async function extractFilesFromDatabase(archiveName) {
           const fileName = file.path;
           if (
             fileName === "check.exe" ||
-            fileName.match(/^tests\/\d{2}\.file$/) ||
-            fileName.match(/^tests\/\d{2}\.a$/)
+            fileName.match(/^tests\/\d{1,2}\.file$/) ||
+            fileName.match(/^tests\/\d{1,2}\.a$/) // it will find both single-digit numbers and two-digit numbers (02.a, 12.a)
           ) {
             const filePromise = file.buffer().then((buffer) => {
               extractedFiles[fileName] = buffer;
@@ -160,7 +156,6 @@ async function extractFilesFromDatabase(archiveName) {
         );
       });
 
-    //console.log("Extracted files:", extractedFiles); files are extracting successfully
     return extractedFiles;
   } else {
     throw new Error(

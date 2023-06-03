@@ -78,7 +78,7 @@ export default async function handler(
         "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png";
 
       if (contestPageId) {
-        const archiveUrl = `https://storage.yandexcloud.net/contest-bucket/${archiveName}.zip`;
+        const archiveUrl = `https://storage.yandexcloud.net/contest-bucket/participantsPhotos/${archiveName}.zip`;
         const zipResponse = await fetch(archiveUrl);
         if (!zipResponse.ok) {
           console.error("Failed to download the archive.");

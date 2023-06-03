@@ -12,7 +12,7 @@ export default async function handler(
   };
 
   try {
-    const archiveUrl = `https://storage.yandexcloud.net/contest-bucket/${archiveName}.zip`;
+    const archiveUrl = `https://storage.yandexcloud.net/contest-bucket/contestTasks/${archiveName}.zip`;
 
     const response = await fetch(archiveUrl);
     const arrayBuffer = await response.arrayBuffer();

@@ -1,3 +1,5 @@
+// old unfinished function
+
 const { Driver, getCredentialsFromEnv, Type } = require('ydb-sdk');
 const { v4: uuidv4 } = require('uuid');
 
