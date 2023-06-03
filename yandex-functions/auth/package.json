@@ -1,10 +1,9 @@
 {
   "name": "auth",
   "version": "1.0.0",
-  "main": "insertAward.js",
+  "main": "auth.js",
   "dependencies": {
     "@yandex-cloud/nodejs-sdk": "^2.4.3",
-    "ydb-sdk": "^4.6.0",
-    "uuid": "^9.0.0"
+    "ydb-sdk": "^4.6.0"
   }
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useProtectedPage } from "../components/protectedPage";
 import {
   TextField,
   Button,
@@ -12,6 +13,7 @@ import {
   Paper,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import { useSession } from "next-auth/react";
 
 interface FormData {
   operation: "insert" | "update" | "delete";
@@ -29,6 +31,7 @@ const InputField = styled(TextField)({
 });
 
 const ManageAwards: React.FC = () => {
+  useProtectedPage();
   const [formData, setFormData] = useState<FormData>({
     operation: "insert",
     awardName: "",
@@ -36,19 +39,42 @@ const ManageAwards: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [awards, setAwards] = useState<Award[]>([]);
+  const { data: session, status: sessionStatus } = useSession();
 
   useEffect(() => {
-    fetchAwards();
-  }, []);
+    if (sessionStatus === "authenticated") {
+      fetchAwards();
+    }
+  }, [sessionStatus]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  
+
   const fetchAwards = async () => {
     try {
+      /*
+      if (!session || !session.user) {
+        console.error("User session not available");
+        return;
+      }
+      const headers = new Headers();
+      headers.append("Content-Type", "application/json");
+      headers.append("Audience", session?.audience || "");
+      headers.append("Email", session.user.email || "");
+
+      console.log("audience:", session?.audience);
+      console.log("email:", session?.user?.email);
+
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f"
+        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f", // secure fetch-db functions that needs headers audience and email to authorize access
+        {
+          headers,
+        }
+      );
+      */
+      const response = await fetch(
+        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f" //fetch-db function
       );
       const data = await response.json();
       setAwards(data.awards);
@@ -62,17 +88,20 @@ const ManageAwards: React.FC = () => {
       setErrorMessage("Invalid award ID");
       return;
     }
-  
+
     try {
-      const response = await fetch("https://functions.yandexcloud.net/d4esum4t3768sp096apb", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          operation: "delete",
-          awardId,
-        }),
-      });
-  
+      const response = await fetch(
+        "https://functions.yandexcloud.net/d4esum4t3768sp096apb", //insertAward function
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            operation: "delete",
+            awardId,
+          }),
+        }
+      );
+
       if (response.ok) {
         setSuccessMessage("Award deleted successfully");
         fetchAwards();
@@ -83,23 +112,28 @@ const ManageAwards: React.FC = () => {
       console.error(error);
       setErrorMessage("Error deleting award");
     }
-  };  
+  };
 
   const handleSubmit = async (e?: React.FormEvent<HTMLFormElement>) => {
     e?.preventDefault();
-  
+
     if (formData.operation !== "delete") {
       try {
         const { operation, awardId, awardName } = formData;
         const url = "https://functions.yandexcloud.net/d4esum4t3768sp096apb";
         const body = { operation, awardId, awardName };
-  
+
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        headers.append("Audience", process.env.GOOGLE_CLIENT_ID || "");
+        headers.append("Email", session?.user?.email || "");
+
         const response = await fetch(url, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers,
           body: JSON.stringify(body),
         });
-  
+
         const data = await response.json();
         console.log(data);
         setSuccessMessage(`Award ${formData.operation}d successfully`);
@@ -110,7 +144,7 @@ const ManageAwards: React.FC = () => {
         setErrorMessage(`Error ${formData.operation}ing award`);
       }
     }
-  };  
+  };
 
   return (
     <Box sx={{ p: 2 }}>

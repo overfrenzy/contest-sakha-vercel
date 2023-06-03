@@ -1,117 +1,112 @@
-const { Driver, getCredentialsFromEnv } = require("ydb-sdk");
-const { v4: uuidv4 } = require("uuid");
-
+const { Driver, getCredentialsFromEnv, getLogger } = require("ydb-sdk");
+const logger = getLogger({ level: "debug" });
 const endpoint = "grpcs://ydb.serverless.yandexcloud.net:2135";
 const database = "/ru-central1/b1g85kiukao953hcpo4a/etn7m4auvt13hjahr714";
 const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
-async function registerUser(username, password) {
-  const userId = uuidv4();
-  const query = `
-    INSERT INTO user (user_id, username, password)
-    VALUES (?, ?, ?)
-  `;
+async function fetchUsers() {
+  let users;
+
   await driver.tableClient.withSession(async (session) => {
-    await session.prepareQuery(query, (preparedQuery) => {
-      preparedQuery.execute([userId, username, password]);
+    // Fetch users data
+    const usersResult = await session.executeQuery(`
+      SELECT * FROM user;
+    `);
+    users = usersResult.resultSets[0].rows.map((row) => {
+      const email = row.items[0]?.bytesValue?.toString("utf8") || "";
+      const id_token = row.items[1]?.bytesValue?.toString("utf8") || "";
+      const name = row.items[2].textValue;
+      const permissions = row.items[3]?.bytesValue?.toString("utf8") || "";
+      return { email, id_token, name, permissions };
     });
   });
-  return userId;
+
+  return {
+    users
+  };
 }
 
-async function loginUser(username) {
-  console.log("Calling loginUser function"); // Log function call
-
+// Insert users data
+async function insertUser(id_token, name, email) {
   const query = `
-    SELECT password FROM user
-    WHERE username = '${username}'
-  `;
-
-  let storedPassword;
-
+  UPSERT INTO user (idToken, name, email)
+  VALUES ("${id_token}", "${name}", "${email}")
+`;
   await driver.tableClient.withSession(async (session) => {
-    try {
-      const result = await session.executeQuery(query);
-      console.log("Query execution successful"); // Log query execution success
-
-      const resultSets = result.resultSets;
-      const resultSet = resultSets[0];
-      const rows = resultSet.rows;
-
-      if (rows.length > 0) {
-        const passwordColumn = rows[0].items[0];
-        storedPassword = passwordColumn.textValue;
-        console.log("Stored password:", storedPassword); // Log the storedPassword value
-      } else {
-        console.log("No password found for the given username.");
-      }
-    } catch (error) {
-      console.error("Error executing query:", error); // Log any error that occurred during query execution
-    }
+    await session.executeQuery(query);
   });
-
-  return storedPassword;
+  return email;
 }
 
 exports.handler = async (event, context) => {
-  const { httpMethod, headers, body } = event;
-
-  const response = {
-    statusCode: 200,
-    headers: {
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
-    },
-  };
-
-  if (httpMethod === "OPTIONS") {
-    return response;
+  if (event.httpMethod === "OPTIONS") {
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+      body: "",
+    };
   }
 
   await driver.ready;
 
-  if (!body || body.trim() === "") {
-    response.statusCode = 400;
-    response.body = "Empty request body";
-    return response;
+  if (event.httpMethod === "GET") {
+    const users = await fetchUsers();
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(users),
+    };
   }
 
-  const { action, username, password } = JSON.parse(body);
-
-  if (!username || !password) {
-    response.statusCode = 400;
-    response.body = "Username and password required";
-    return response;
-  }
-
-  try {
-    if (action === "register") {
-      const userId = await registerUser(username, password);
-      response.body = JSON.stringify({ userId });
-      return response;
-    } else if (action === "login") {
-      const storedPassword = await loginUser(username);
-      if (storedPassword === password) {
-        response.body = JSON.stringify({ success: true, password: storedPassword });
-        return response;
-      } else {
-        response.statusCode = 401;
-        response.body = JSON.stringify({
-          success: false,
-          message: "Invalid username or password",
-        });
-        return response;
-      }
-    } else {
-      response.statusCode = 400;
-      response.body = "Invalid action";
-      return response;
+  if (event.httpMethod === "POST") {
+    if (!event.body || typeof event.body !== "string" || event.body.trim() === "") {
+      return {
+        statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ message: "Empty request body" }),
+      };
     }
-  } catch (error) {
-    response.statusCode = 500;
-    response.body = "Internal server error";
-    return response;
+
+    let parsedBody;
+    try {
+      parsedBody = JSON.parse(event.body);
+    } catch (error) {
+      return {
+        statusCode: 400,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ message: "Invalid JSON format" }),
+      };
+    }
+
+    const { id_token, name, email } = parsedBody;
+
+    await insertUser(id_token, name, email);
+
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({ message: "User added successfully" }),
+    };
   }
+
+  return {
+    statusCode: 405,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+    },
+    body: JSON.stringify({ message: "Method not allowed" }),
+  };
 };

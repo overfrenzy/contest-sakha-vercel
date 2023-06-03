@@ -20,6 +20,6 @@
       "@/*": [ "./*" ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "yandex-functions/populateDB/populateDB.js"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "yandex-functions/populateDB/populateDB.js", "pages/api/auth.js", "pages/api/auth/[...nextauth].js", "pages/protectedPage.js", "components/fetchParticipants.js", "components/contestTable.js", "components/contestTable.js", "pages/tasks-2021.js"],
   "exclude": ["node_modules"]
 }

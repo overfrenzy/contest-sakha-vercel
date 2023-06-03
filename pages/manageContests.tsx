@@ -50,7 +50,7 @@ const ManageContests: React.FC = () => {
   const fetchContests = async () => {
     try {
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f"
+        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f" //fetch-db function
       );
       const data = await response.json();
       setContests(data.contests);

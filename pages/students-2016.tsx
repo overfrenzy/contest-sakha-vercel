@@ -1,93 +1,41 @@
-import fsPromises from 'fs/promises';
-import path from 'path';
-import { Container, Grid, Paper, Typography, Box } from '@mui/material';
+import { Container, Typography } from "@mui/material";
+import ParticipantTable from "../components/participantTable";
+import { useState, useEffect } from "react";
 import AppBar from '../components/AppBar2';
-import Image from 'next/image';
-import styles from '../styles/index.module.css';
 
-export default function Home(props) {
-  const students = props.students;
+export default function Students2021() {
+  const [students, setStudents] = useState([]);
+
+  useEffect(() => {
+    const fetchParticipants = async () => {
+      try {
+        const archiveName = encodeURIComponent("tuy-2016"); // Change archive name here
+        const contestName = encodeURIComponent("TUY-2016"); // Charge contest name here
+        const response = await fetch(
+          `/api/fetchParticipants?archiveName=${archiveName}&contestName=${contestName}`
+        );
+        const data = await response.json();
+        setStudents(data.students);
+      } catch (error) {
+        console.error(error);
+        setStudents([]);
+      }
+    };
+
+    fetchParticipants();
+  }, []);
 
   return (
-    <div className={styles.content}>
-      <AppBar />
+    <>
+    <AppBar />
+    <div>
       <Container sx={{ marginY: 3 }}>
         <Typography variant="h2" component="h2">
           Участники
         </Typography>
-        <Grid container spacing={2} alignItems="stretch">
-          {students.map((elem, i) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={i.toString()}>
-              <Paper elevation={3}>
-                <div className={styles['image-container']}>
-                  <Image
-                    src={elem.image}
-                    alt={elem.participant_ru}
-                    width={300}
-                    height={300}
-                    layout="responsive"
-                  />
-                </div>
-                <Box padding={2}>
-                  <Box minHeight="3em">
-                    <Typography variant="subtitle1" component="h2">
-                      {elem.participant_ru}
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      marginTop: 1,
-                      marginBottom: 1,
-                    }}
-                  >
-                    <Typography variant="body2" component="p" marginLeft={0.5}>
-                      {elem.country_ru}
-                    </Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      height: '20px',
-                      flexGrow: 1,
-                    }}
-                  >
-                    {elem.place !== '' ? (
-                      <Typography
-                        variant="body2"
-                        component="p"
-                        marginLeft={0.5}
-                      >
-                        {elem.place} место
-                      </Typography>
-                    ) : (
-                      <Typography
-                        variant="body2"
-                        component="p"
-                        marginLeft={0.5}
-                      >
-                        {' '}
-                      </Typography>
-                    )}
-                  </Box>
-                </Box>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
+        <ParticipantTable students={students} />
       </Container>
     </div>
+    </>
   );
-}
-
-export async function getStaticProps() {
-  const filePath = path.join(process.cwd(), "./shared/data2016.json");
-  const jsonData = await fsPromises.readFile(filePath);
-  const objectData = JSON.parse(jsonData.toString());
-
-  return {
-    props: objectData,
-  };
 }

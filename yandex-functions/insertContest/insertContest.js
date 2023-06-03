@@ -10,7 +10,7 @@ async function upsertContest(contestId, name, year, tasks) {
   const tasksJson = JSON.stringify(tasks);
   const query = `
     UPSERT INTO contest (contest_id, name, year, tasks)
-    VALUES ("${contestId}", "${name}", ${year}, '${tasksJson}')
+    VALUES ("${contestId}", "${name}", ${year}, ${tasksJson})
   `;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
