@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles";
 
 interface FormData {
   name: string | null;
-  tasks: object | null;
+  tasks: string | null; 
   year: number | null;
 }
 
@@ -27,17 +27,18 @@ const InsertContest: React.FC = () => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      if (event.target) {
-        setFormData({
-          ...formData,
-          tasks: JSON.parse(event.target.result as string),
-        });
-      }
-    };
     if (e.target.files && e.target.files.length > 0) {
-      reader.readAsText(e.target.files[0]);
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        if (event.target && event.target.result) {
+          setFormData({
+            ...formData,
+            tasks: event.target.result as string,
+          });
+        }
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -45,13 +46,13 @@ const InsertContest: React.FC = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b", //insertContest function
+        "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b", // insertContest function
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             name: formData.name,
-            tasks: formData.tasks,
+            tasks: JSON.parse(formData.tasks || ""),
             year: formData.year,
           }),
         }
@@ -98,11 +99,13 @@ const InsertContest: React.FC = () => {
         <br />
         <InputField
           fullWidth
-          type="file"
+          label="Tasks"
           id="tasks"
           name="tasks"
-          inputRef={fileInputRef}
-          onChange={handleFileChange}
+          multiline
+          rows={4}
+          value={formData.tasks || ""}
+          onChange={handleChange}
         />
         <br />
         <Button variant="contained" type="submit">

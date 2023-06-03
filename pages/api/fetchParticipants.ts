@@ -74,33 +74,34 @@ export default async function handler(
         (award) => award.award_id === participation.award_id
       );
 
-      const archiveUrl = `https://storage.yandexcloud.net/contest-bucket/${archiveName}.zip`;
-      const zipResponse = await fetch(archiveUrl);
-      if (!zipResponse.ok) {
-        throw new Error("Failed to download the archive.");
-      }
-      const zipBuffer = await zipResponse.buffer();
+      let image =
+        "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png";
 
-      const extractFolderPath = await unzipper.Open.buffer(zipBuffer);
-      const imageExtensions = [".png", ".jpg", ".jpeg"];
-      const imageFilePath = imageExtensions
-        .map((extension) => `${participant?.name}${extension}`)
-        .find((path) =>
-          extractFolderPath.files.some((file) => file.path === path)
-        );
-      const extractedImage = extractFolderPath.files.find(
-        (file) => file.path === imageFilePath
-      );
+      if (contestPageId) {
+        const archiveUrl = `https://storage.yandexcloud.net/contest-bucket/${archiveName}.zip`;
+        const zipResponse = await fetch(archiveUrl);
+        if (!zipResponse.ok) {
+          console.error("Failed to download the archive.");
+        } else {
+          const zipBuffer = await zipResponse.buffer();
+          const extractFolderPath = await unzipper.Open.buffer(zipBuffer);
+          const imageExtensions = [".png", ".jpg", ".jpeg"];
+          const imageFilePath = imageExtensions
+            .map((extension) => `${participant?.name}${extension}`)
+            .find((path) =>
+              extractFolderPath.files.some((file) => file.path === path)
+            );
+          const extractedImage = extractFolderPath.files.find(
+            (file) => file.path === imageFilePath
+          );
 
-      let image;
-      if (extractedImage) {
-        const imageBuffer = await extractedImage.buffer();
-        const base64Image = Buffer.from(imageBuffer).toString("base64");
-        const imageUrl = `data:image/${extractedImage.type};base64,${base64Image}`;
-        image = imageUrl;
-      } else {
-        image =
-          "https://villagesonmacarthur.com/wp-content/uploads/2020/12/Blank-Avatar.png";
+          if (extractedImage) {
+            const imageBuffer = await extractedImage.buffer();
+            const base64Image = Buffer.from(imageBuffer).toString("base64");
+            const imageUrl = `data:image/${extractedImage.type};base64,${base64Image}`;
+            image = imageUrl;
+          }
+        }
       }
 
       return {
