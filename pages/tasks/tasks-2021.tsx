@@ -1,6 +1,6 @@
 import React from 'react';
-import Component from '../components/tasksTable';
-import Checker from '../components/checker';
+import TasksTable from '../../components/tasksTable';
+import Checker from '../../components/checker';
 
 const archiveName = "tuybook2021"; //change archive name for the contest tasks here
 const archiveName2 = "granopodus-26%24windows.zip"; // change the archive name for the test case here
@@ -12,7 +12,7 @@ const MainPage = () => {
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <Checker archiveName={archiveName2} />
       </div>
-      <Component archiveName={archiveName} markdownFilePath={markdownFilePath} />
+      <TasksTable archiveName={archiveName} markdownFilePath={markdownFilePath} />
     </div>
   );
 };

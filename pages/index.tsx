@@ -31,12 +31,12 @@ export default function HomePage() {
                 },
               }}
             >
-              <Button href="/tuy-2005">Туймаада-2005</Button>
-              <Button href="/tuy-2016">Туймаада-2016</Button>
-              <Button href="/tuy-2017">Туймаада-2017</Button>
-              <Button href="/tuy-2018">Туймаада-2018</Button>
-              <Button href="/tuy-2019">Туймаада-2019</Button>
-              <Button href="/tuy-2021">Туймаада-2021</Button>
+              <Button href="/contests/tuy-2005">Туймаада-2005</Button>
+              <Button href="/contests/tuy-2016">Туймаада-2016</Button>
+              <Button href="/contests/tuy-2017">Туймаада-2017</Button>
+              <Button href="/contests/tuy-2018">Туймаада-2018</Button>
+              <Button href="/contests/tuy-2019">Туймаада-2019</Button>
+              <Button href="/contests/tuy-2021">Туймаада-2021</Button>
             </ButtonGroup>
           </Grid>
         </Grid>

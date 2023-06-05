@@ -1,7 +1,7 @@
 import { Container, Typography } from "@mui/material";
-import ParticipantTable from "../components/participantTable";
+import ParticipantTable from "../../components/participantTable";
 import { useState, useEffect } from "react";
-import AppBar from '../components/AppBar2';
+import AppBar from '../../components/AppBar2';
 
 export default function Students2021() {
   const [students, setStudents] = useState([]);
@@ -9,8 +9,8 @@ export default function Students2021() {
   useEffect(() => {
     const fetchParticipants = async () => {
       try {
-        const archiveName = encodeURIComponent("tuy-2019"); // Change archive name here
-        const contestName = encodeURIComponent("TUY-2019"); // Charge contest name here
+        const archiveName = encodeURIComponent("tuy-2016"); // Change archive name here
+        const contestName = encodeURIComponent("TUY-2016"); // Charge contest name here
         const response = await fetch(
           `/api/fetchParticipants?archiveName=${archiveName}&contestName=${contestName}`
         );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ContestTable from '../components/contestTable';
-import AppBar from '../components/AppBar1';
-import indexStyles from '../styles/index.module.css';
+import ContestTable from '../../components/contestTable';
+import AppBar from '../../components/AppBar1';
+import indexStyles from '../../styles/index.module.css';
 import Grid from '@mui/material/Grid';
 
 export default function Home() {
