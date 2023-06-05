@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useProtectedPage } from "../components/protectedPage";
 import {
   TextField,
   Button,
@@ -31,7 +30,6 @@ const InputField = styled(TextField)({
 });
 
 const ManageAwards: React.FC = () => {
-  useProtectedPage();
   const [formData, setFormData] = useState<FormData>({
     operation: "insert",
     awardName: "",

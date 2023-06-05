@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useProtectedPage } from "../components/protectedPage";
 import {
   TextField,
   Button,
@@ -33,7 +32,6 @@ const InputField = styled(TextField)({
 });
 
 const ManageContests: React.FC = () => {
-  useProtectedPage();
   const [contests, setContests] = useState<Contest[]>([]);
   const [formData, setFormData] = useState<FormData>({
     contestId: null,
