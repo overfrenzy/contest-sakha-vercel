@@ -15,10 +15,9 @@ async function fetchUsers() {
     `);
     users = usersResult.resultSets[0].rows.map((row) => {
       const email = row.items[0]?.bytesValue?.toString("utf8") || "";
-      const id_token = row.items[1]?.bytesValue?.toString("utf8") || "";
-      const name = row.items[2].textValue;
-      const permissions = row.items[3]?.bytesValue?.toString("utf8") || "";
-      return { email, id_token, name, permissions };
+      const name = row.items[1].textValue;
+      const permissions = row.items[2]?.bytesValue?.toString("utf8") || "";
+      return { email, name, permissions };
     });
   });
 
@@ -28,10 +27,10 @@ async function fetchUsers() {
 }
 
 // Insert users data
-async function insertUser(id_token, name, email) {
+async function insertUser(name, email) {
   const query = `
-  UPSERT INTO user (idToken, name, email)
-  VALUES ("${id_token}", "${name}", "${email}")
+  UPSERT INTO user (name, email)
+  VALUES ("${name}", "${email}")
 `;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
@@ -89,9 +88,9 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const { id_token, name, email } = parsedBody;
+    const { name, email } = parsedBody;
 
-    await insertUser(id_token, name, email);
+    await insertUser(name, email);
 
     return {
       statusCode: 200,

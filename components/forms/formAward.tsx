@@ -25,12 +25,12 @@ const InsertAward: React.FC = () => {
     e.preventDefault();
     try {
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4esum4t3768sp096apb", // replace with your function endpoint
+        "https://functions.yandexcloud.net/d4esum4t3768sp096apb",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            operation: "insert", // add the operation field
+            operation: "insert",
             awardName: formData.awardName,
           }),
         }

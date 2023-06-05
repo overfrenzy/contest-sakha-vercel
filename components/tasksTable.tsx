@@ -9,7 +9,7 @@ interface ImageData {
   url: string;
 }
 
-const Component = ({ archiveName, markdownFilePath }: { archiveName: string, markdownFilePath: string }) => {
+const TasksTable = ({ archiveName, markdownFilePath }: { archiveName: string, markdownFilePath: string }) => {
   const [markdownContent, setMarkdownContent] = useState("");
   const [imageUrls, setImageUrls] = useState<ImageData[]>([]);
 
@@ -96,4 +96,4 @@ const Component = ({ archiveName, markdownFilePath }: { archiveName: string, mar
   );
 };
 
-export default Component;
+export default TasksTable;

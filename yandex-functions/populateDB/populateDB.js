@@ -1,3 +1,5 @@
+// old absolete function
+
 const { Driver, getCredentialsFromEnv, getLogger } = require("ydb-sdk");
 const { v4: uuidv4 } = require('uuid');
 const logger = getLogger({ level: "debug" });

@@ -4,6 +4,7 @@
   "main": "insertAward.js",
   "dependencies": {
     "@yandex-cloud/nodejs-sdk": "^2.4.3",
+    "google-auth-library": "^8.8.0",
     "ydb-sdk": "^4.6.0"
   }
 }

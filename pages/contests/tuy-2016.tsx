@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import ContestTable from '../components/contestTable';
-import AppBar from '../components/AppBar1';
-import indexStyles from '../styles/index.module.css';
+import ContestTable from '../../components/contestTable';
+import AppBar from '../../components/AppBar1';
+import indexStyles from '../../styles/index.module.css';
 import Grid from '@mui/material/Grid';
 
 export default function Home() {
@@ -18,7 +18,7 @@ export default function Home() {
   useEffect(() => {
     const fetchContests = async () => {
       try {
-        const contestName = encodeURIComponent('TUY-2018'); // Change contest name here
+        const contestName = encodeURIComponent('TUY-2016'); // Change contest name here
         const response = await fetch(`/api/fetchContests?contestName=${contestName}`);
         const data = await response.json();
         setFilteredParticipations(data.filteredParticipations);
@@ -34,7 +34,7 @@ export default function Home() {
   return (
     <>
       <AppBar />
-      <h1 className={indexStyles.title}>Tuymaada-2018</h1>
+      <h1 className={indexStyles.title}>Tuymaada-2016</h1>
       <h2 className={indexStyles.title}>Протокол</h2>
       <Grid container spacing={2}>
         <Grid item xs={12}>

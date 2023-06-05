@@ -34,6 +34,7 @@
     "http": "^0.0.1-security",
     "isomorphic-unfetch": "^4.0.2",
     "jose": "^4.14.4",
+    "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.0",
     "markdown-it": "^13.0.1",
     "marked": "^1.2.9",

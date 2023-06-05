@@ -1,3 +1,5 @@
+// old absolete function
+
 const { Driver, getCredentialsFromEnv, getLogger, Ydb } = require("ydb-sdk");
 const express = require("express");
 const cors = require("cors");
