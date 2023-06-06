@@ -136,6 +136,7 @@ const InsertContest: React.FC = () => {
           Add Task
         </Button>
         <br />
+        <br />
         <Button variant="contained" type="submit">
           Add Contest
         </Button>

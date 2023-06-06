@@ -13,7 +13,7 @@ import {
 
 interface Data {
   countries: { country_id: string; name: string }[];
-  schools: { school_id: string; schoolName: string[] }[];
+  schools: { school_id: string; schoolname: { name: string } }[]; // updated this line
   participations: { participation_id: string; contest_id: string }[];
   awards: { award_id: string; name: string }[];
   contests: { contest_id: string; name: string }[];
@@ -31,6 +31,7 @@ function InsertParticipant() {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedSchool, setSelectedSchool] = useState("");
   const [participantName, setParticipantName] = useState("");
+
   const [selectedContest, setSelectedContest] = useState("");
   const [selectedAward, setSelectedAward] = useState("");
   const [tasks1, setTasks1] = useState("");
@@ -51,20 +52,22 @@ function InsertParticipant() {
   };
 
   async function fetchData() {
-    try {
-      const response = await fetch(
-        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f", // fetch-db function
-        {
-          method: "GET",
-        }
-      );
-      const data = await response.json();
-      setData(data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Failed to fetch data");
-    }
+    const response = await fetch(
+      "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f", //fetch-db function
+      {
+      method: "GET",
+      }
+    );
+    const data = await response.json();
+    
+    // Parse schoolname from string to object
+    data.schools = data.schools.map((school: any) => ({
+      ...school,
+      schoolname: JSON.parse(school.schoolname),
+    }));
+    
+    setData(data);
+    setLoading(false);
   }
 
   const handleTasksChange1 = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,10 +85,9 @@ function InsertParticipant() {
       const tasksDoneJson = JSON.stringify({
         problems1: tasksArray1,
         problems2: tasksArray2,
-      });
-
+      }); // convert tasksArray1 and tasksArray2 to JSON
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4eqfmirprh225fg72au", // insertParticipant function
+        "https://functions.yandexcloud.net/d4eqfmirprh225fg72au",
         {
           method: "POST",
           headers: {
@@ -97,7 +99,7 @@ function InsertParticipant() {
             name: participantName,
             contest: selectedContest,
             award: selectedAward,
-            tasksDone: tasksDoneJson,
+            tasksDone: tasksDoneJson, // send the JSON object
             time: time,
             tryCount: tryCount,
           }),
@@ -111,7 +113,6 @@ function InsertParticipant() {
         setErrorMessage("An error occurred while adding the participant.");
       }
     } catch (error) {
-      console.error(error);
       setErrorMessage("An error occurred while adding the participant.");
     }
   }
@@ -148,11 +149,12 @@ function InsertParticipant() {
               value={selectedCountry}
               onChange={(e) => setSelectedCountry(e.target.value)}
             >
-              {data.schools.map((school) => (
-                <MenuItem key={school.school_id} value={school.school_id}>
-                  {school.schoolName.join(", ")}
-                </MenuItem>
-              ))}
+              {data.countries &&
+                data.countries.map((country) => (
+                  <MenuItem key={country.country_id} value={country.country_id}>
+                    {country.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
           <Button onClick={refreshData}>Refresh</Button>
@@ -164,11 +166,12 @@ function InsertParticipant() {
               value={selectedSchool}
               onChange={(e) => setSelectedSchool(e.target.value)}
             >
-              {data.schools.map((school) => (
-                <MenuItem key={school.school_id} value={school.school_id}>
-                  {school.schoolName}
-                </MenuItem>
-              ))}
+              {data.schools &&
+                data.schools.map((school) => (
+                  <MenuItem key={school.school_id} value={school.school_id}>
+                    {school.schoolname.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
           <Button onClick={refreshData}>Refresh</Button>
@@ -191,11 +194,12 @@ function InsertParticipant() {
               value={selectedContest}
               onChange={(e) => setSelectedContest(e.target.value)}
             >
-              {data.contests.map((contest) => (
-                <MenuItem key={contest.contest_id} value={contest.contest_id}>
-                  {contest.name}
-                </MenuItem>
-              ))}
+              {data.contests &&
+                data.contests.map((contest) => (
+                  <MenuItem key={contest.contest_id} value={contest.contest_id}>
+                    {contest.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
           <Button onClick={refreshData}>Refresh</Button>
@@ -208,11 +212,12 @@ function InsertParticipant() {
               onChange={(e) => setSelectedAward(e.target.value)}
             >
               <MenuItem value="">None</MenuItem>
-              {data.awards.map((award) => (
-                <MenuItem key={award.award_id} value={award.award_id}>
-                  {award.name}
-                </MenuItem>
-              ))}
+              {data.awards &&
+                data.awards.map((award) => (
+                  <MenuItem key={award.award_id} value={award.award_id}>
+                    {award.name}
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
 
@@ -277,5 +282,4 @@ function InsertParticipant() {
     </div>
   );
 }
-
 export default InsertParticipant;

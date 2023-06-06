@@ -6,7 +6,7 @@ RUN apk add --no-cache build-base
 
 COPY package.json package-lock.json /app/
 
-RUN npm ci --production
+RUN npm i --production
 
 COPY . /app/
 

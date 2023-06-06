@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import indexStyles from '../styles/index.module.css';
+import React, { useState } from "react";
+import axios from "axios";
+import {useRouter} from 'next/router';
+import indexStyles from "../styles/index.module.css";
 
 type ArchiveOption = {
   name: string;
@@ -14,7 +15,8 @@ type CheckerProps = {
 export function Checker({ testCaseArchives }: CheckerProps) {
   const [file, setFile] = useState<File | null>(null);
   const [selectedArchive, setSelectedArchive] = useState(testCaseArchives[0]);
-  const [responseText, setResponseText] = useState('');
+  const [responseText, setResponseText] = useState("");
+  const router = useRouter();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -27,31 +29,29 @@ export function Checker({ testCaseArchives }: CheckerProps) {
     if (file) {
       try {
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append("file", file);
 
         const headers = {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
+          "X-Archive-Name": selectedArchive.archive,
         };
 
         const response = await axios.post(
-          'https://bbae9r5ui6925a9jluiq.containers.yandexcloud.net/',
+          "https://bbae9r5ui6925a9jluiq.containers.yandexcloud.net/",
           formData,
           {
             headers: headers,
-            params: {
-              archiveName: selectedArchive.archive,
-            },
           }
         );
-
         setResponseText(response.data);
-        alert('File uploaded successfully!');
+        router.push(`/Result?result=${encodeURIComponent(response.data)}`);
+        alert("File uploaded successfully!");
       } catch (error) {
-        console.error('Error uploading file:', error);
-        alert('Failed to upload file');
+        console.error("Error uploading file:", error);
+        alert("Failed to upload file");
       }
     } else {
-      alert('Please select a file');
+      alert("Please select a file");
     }
   };
 
