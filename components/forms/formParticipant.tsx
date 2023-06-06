@@ -13,10 +13,11 @@ import {
 
 interface Data {
   countries: { country_id: string; name: string }[];
-  schools: { school_id: string; schoolname: { name: string } }[]; // updated this line
+  schools: { school_id: string; schoolname_id: string }[];
   participations: { participation_id: string; contest_id: string }[];
   awards: { award_id: string; name: string }[];
   contests: { contest_id: string; name: string }[];
+  schoolnames: { schoolname_id: string; name: string }[];
 }
 
 function InsertParticipant() {
@@ -26,6 +27,7 @@ function InsertParticipant() {
     participations: [],
     awards: [],
     contests: [],
+    schoolnames: [],
   });
   const [loading, setLoading] = useState(true);
   const [selectedCountry, setSelectedCountry] = useState("");
@@ -55,17 +57,10 @@ function InsertParticipant() {
     const response = await fetch(
       "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f", //fetch-db function
       {
-      method: "GET",
+        method: "GET",
       }
     );
     const data = await response.json();
-    
-    // Parse schoolname from string to object
-    data.schools = data.schools.map((school: any) => ({
-      ...school,
-      schoolname: JSON.parse(school.schoolname),
-    }));
-    
     setData(data);
     setLoading(false);
   }
@@ -169,7 +164,11 @@ function InsertParticipant() {
               {data.schools &&
                 data.schools.map((school) => (
                   <MenuItem key={school.school_id} value={school.school_id}>
-                    {school.schoolname.name}
+                    {
+                      data.schoolnames.find(
+                        (sn) => sn.schoolname_id === school.schoolname_id
+                      )?.name
+                    }
                   </MenuItem>
                 ))}
             </Select>
