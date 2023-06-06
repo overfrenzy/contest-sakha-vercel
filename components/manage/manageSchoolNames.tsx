@@ -1,44 +1,45 @@
-import React, { useState, useEffect, useRef } from "react";
-import { TextField, Button, Box, InputLabel } from "@mui/material";
-import { styled } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
+import {
+  TextField,
+  Button,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
 interface School {
-  schoolId: string;
-  schoolName: string;
+  school_id: string;
+  schoolname: object;
 }
 
 interface FormData {
-  schoolId: string | null;
-  schoolName: string | null;
+  schoolName: string;
 }
 
-const InputField = styled(TextField)({
-  marginBottom: "1rem",
-});
-
 const ManageSchools: React.FC = () => {
-  const [formData, setFormData] = useState<FormData>({
-    schoolId: null,
-    schoolName: null,
-  });
   const [schools, setSchools] = useState<School[]>([]);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [formData, setFormData] = useState<FormData>({
+    schoolName: "",
+  });
 
   useEffect(() => {
-    // Fetch existing schools data from the server
     fetchSchools();
   }, []);
 
   const fetchSchools = async () => {
     try {
-      const response = await fetch("https://functions.yandexcloud.net/d4e96bpn267cvipclv1f"); // fetch db
+      const response = await fetch(
+        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f"
+      );
       const data = await response.json();
-      setSchools(data);
+      setSchools(data.schools);
     } catch (error) {
       console.error(error);
-      setErrorMessage("Failed to fetch schools");
     }
   };
 
@@ -46,127 +47,102 @@ const ManageSchools: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const addSchool = async () => {
-    if (!formData.schoolName) {
-      setErrorMessage("School name is required");
-      return;
-    }
-
-    try {
-      const response = await fetch("https://functions.yandexcloud.net/d4e17dlips5imntja58l", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setSuccessMessage("School added successfully");
-        setFormData({ schoolId: null, schoolName: null });
-        if (fileInputRef.current) {
-          fileInputRef.current.value = "";
-        }
-        fetchSchools(); // Refresh the schools data after adding a new school
-      } else {
-        setErrorMessage("Failed to add school");
-      }
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Failed to add school");
-    }
-  };
-
-  const editSchool = async (school: School) => {
-    setFormData({ schoolId: school.schoolId, schoolName: school.schoolName });
-  };
-
-  const updateSchool = async () => {
-    if (!formData.schoolId || !formData.schoolName) {
-      setErrorMessage("School ID and name are required");
-      return;
-    }
-
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     try {
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4e17dlips5imntja58l",
+        "https://functions.yandexcloud.net/d4e17dlips5imntja58l", // Insert school function endpoint
         {
-          method: "PUT",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify({
+            schoolName: JSON.parse(formData.schoolName),
+          }),
         }
       );
-
-      if (response.ok) {
-        setSuccessMessage("School updated successfully");
-        setFormData({ schoolId: null, schoolName: null });
-        fetchSchools(); // Refresh the schools data after updating the school
-      } else {
-        setErrorMessage("Failed to update school");
-      }
+      const data = await response.json();
+      console.log(data);
+      setFormData({ schoolName: "" });
+      fetchSchools();
     } catch (error) {
       console.error(error);
-      setErrorMessage("Failed to update school");
     }
   };
 
-  const deleteSchool = async (school: School) => {
+  const handleEdit = async (school: School) => {
+    setFormData({
+      schoolName: JSON.stringify(school.schoolname),
+    });
+  };
+
+  const handleDelete = async (schoolId: string) => {
     try {
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4e17dlips5imntja58l",
+        `https://functions.yandexcloud.net/d4e17dlips5imntja58l`, // Delete school function endpoint
         {
           method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(school),
         }
       );
-
-      if (response.ok) {
-        setSuccessMessage("School deleted successfully");
-        fetchSchools(); // Refresh the schools data after deleting the school
-      } else {
-        setErrorMessage("Failed to delete school");
-      }
+      const data = await response.json();
+      console.log(data);
+      fetchSchools();
     } catch (error) {
       console.error(error);
-      setErrorMessage("Failed to delete school");
     }
   };
 
   return (
     <Box sx={{ p: 2 }}>
-      <h2>School Form</h2>
-      {successMessage && <p>{successMessage}</p>}
-      {errorMessage && <p>{errorMessage}</p>}
-      <form>
-        <InputField
-          fullWidth
+      <h2>Manage Schools</h2>
+      <form onSubmit={(e) => handleSubmit(e)}>
+        <TextField
           label="School Name"
-          id="schoolName"
           name="schoolName"
-          value={formData.schoolName || ""}
+          value={formData.schoolName}
           onChange={handleChange}
+          fullWidth
+          variant="outlined"
+          required
         />
-        <br />
-        <Button variant="contained" onClick={addSchool}>
+        <Button variant="contained" type="submit">
           Add School
         </Button>
-        <Button variant="contained" onClick={updateSchool}>
-          Update School
-        </Button>
       </form>
-      <br />
-      <h3>Schools</h3>
-      {schools.map((school) => (
-        <div key={school.schoolId}>
-          <p>{school.schoolName}</p>
-          <Button variant="contained" onClick={() => editSchool(school)}>
-            Edit
-          </Button>
-          <Button variant="contained" onClick={() => deleteSchool(school)}>
-            Delete
-          </Button>
-          <br />
-        </div>
-      ))}
+      <TableContainer component={Paper} sx={{ mt: 4 }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>School ID</TableCell>
+              <TableCell>School Name</TableCell>
+              <TableCell>Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {schools.map((school) => (
+              <TableRow key={school.school_id}>
+                <TableCell>{school.school_id}</TableCell>
+                <TableCell>{JSON.stringify(school.schoolname)}</TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleEdit(school)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleDelete(school.school_id)}
+                  >
+                    Delete
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 };

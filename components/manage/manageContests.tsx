@@ -78,9 +78,6 @@ const ManageContests: React.FC = () => {
         }),
       });
   
-      const data = await response.json();
-      console.log(data);
-  
       setSuccessMessage("Contest updated successfully");
       setFormData({ contestId: null, name: null, tasks: null, year: null });
       if (fileInputRef.current) {

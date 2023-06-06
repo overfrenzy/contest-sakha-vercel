@@ -7,16 +7,35 @@ const InputField = styled(TextField)({
 });
 
 const InsertSchool: React.FC = () => {
-  const [schoolName, setSchoolName] = useState("");
+  const [schoolNames, setSchoolNames] = useState<string[]>([""]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSchoolName(e.target.value);
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>, index: number) => {
+    const { value } = e.target;
+    setSchoolNames((prevSchoolNames) => {
+      const updatedSchoolNames = [...prevSchoolNames];
+      updatedSchoolNames[index] = value;
+      return updatedSchoolNames;
+    });
+  };
+
+  const addInputLine = () => {
+    setSchoolNames((prevSchoolNames) => [...prevSchoolNames, ""]);
+  };
+
+  const removeInputLine = (index: number) => {
+    setSchoolNames((prevSchoolNames) => {
+      const updatedSchoolNames = [...prevSchoolNames];
+      updatedSchoolNames.splice(index, 1);
+      return updatedSchoolNames;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!schoolName) {
+    const filteredSchoolNames = schoolNames.filter(Boolean); // Remove empty values
+
+    if (filteredSchoolNames.length === 0) {
       console.error("School name is required");
       return;
     }
@@ -27,18 +46,18 @@ const InsertSchool: React.FC = () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ school: { schoolName } }),
+          body: JSON.stringify({ school: { schoolName: filteredSchoolNames } }),
         }
       );
 
       if (response.ok) {
-        console.log("School name added successfully");
-        setSchoolName("");
+        console.log("School names added successfully");
+        setSchoolNames([""]);
       } else {
-        console.error("Failed to add school name");
+        console.error("Failed to add school names");
       }
     } catch (error) {
-      console.error("Error adding school name", error);
+      console.error("Error adding school names", error);
     }
   };
 
@@ -46,14 +65,25 @@ const InsertSchool: React.FC = () => {
     <Box sx={{ p: 2 }}>
       <h2>Insert School</h2>
       <form onSubmit={handleSubmit}>
-        <InputField
-          fullWidth
-          label="School Name"
-          value={schoolName}
-          onChange={handleInputChange}
-        />
-        <Button variant="contained" type="submit">
+        {schoolNames.map((schoolName, index) => (
+          <InputField
+            key={index}
+            fullWidth
+            label="School Name"
+            value={schoolName}
+            onChange={(e) => handleInputChange(e, index)}
+          />
+        ))}
+        <Button variant="contained" onClick={addInputLine}>
           Add School
+        </Button>
+        {schoolNames.length > 1 && (
+          <Button variant="contained" onClick={() => removeInputLine(schoolNames.length - 1)}>
+            Remove School
+          </Button>
+        )}
+        <Button variant="contained" type="submit">
+          Add Schools
         </Button>
       </form>
     </Box>

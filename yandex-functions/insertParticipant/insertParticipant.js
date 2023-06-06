@@ -25,7 +25,7 @@ async function insertParticipant(participant) {
     // Insert participation
     await session.executeQuery(`
       INSERT INTO participation (participation_id, participant_id, award_id, contest_id, tasksdone, time, trycount)
-      VALUES ('${participationId}', '${participantId}', '${participant.award}', '${participant.contest}', '${participant.tasksDone}', ${participant.time || 'NULL'}, ${participant.tryCount || 'NULL'});
+      VALUES ('${participationId}', '${participantId}', '${participant.award}', '${participant.contest}', '${JSON.stringify(participant.tasksDone)}', ${participant.time || 'NULL'}, ${participant.tryCount || 'NULL'});
     `);
   });
 }
