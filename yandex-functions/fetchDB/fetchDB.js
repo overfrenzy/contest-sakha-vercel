@@ -6,7 +6,7 @@ const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
 async function fetchData() {
-  let countries, schools, participations, awards, contests, schoolnames;
+  let countries, schools, participations, awards, contests;
 
   await driver.tableClient.withSession(async (session) => {
     // Fetch countries data
@@ -25,8 +25,8 @@ async function fetchData() {
     `);
     schools = schoolsResult.resultSets[0].rows.map((row) => {
       const school_id = row.items[0]?.bytesValue?.toString("utf8") || "";
-      const schoolname_id = row.items[1]?.bytesValue?.toString("utf8") || "";
-      return { school_id, schoolname_id };
+      const schoolname = row.items[1].textValue;
+      return { school_id, schoolname };
     });
 
     // Fetch participations data
@@ -75,16 +75,6 @@ async function fetchData() {
       return { contest_id, name, tasks, year };
     });
 
-    // Fetch school names data
-    const schoolNamesResult = await session.executeQuery(`
-      SELECT * FROM schoolname;
-    `);
-    schoolnames = schoolNamesResult.resultSets[0].rows.map((row) => {
-      const name = row.items[0].textValue;
-      const schoolname_id = row.items[1]?.bytesValue?.toString("utf8") || "";
-      return { name, schoolname_id };
-    });
-
     // Fetch participant names data
     const participantResult = await session.executeQuery(`
       SELECT * FROM participant;
@@ -105,7 +95,6 @@ async function fetchData() {
     participations,
     awards,
     contests,
-    schoolnames,
     participants,
   };
 }

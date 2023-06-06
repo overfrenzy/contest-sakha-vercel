@@ -3,14 +3,19 @@ import TasksTable from '../../components/tasksTable';
 import Checker from '../../components/checker';
 
 const archiveName = "tuybook2021"; //change archive name for the contest tasks here
-const archiveName2 = "granopodus-26%24windows.zip"; // change the archive name for the test case here
 const markdownFilePath = "tuybook2021.md"; //change markdown name in the contest task archive
+
+const availableTestCaseArchives = [
+  { name: "Task A", archive: "granopodus-26%24windows.zip" },
+  { name: "Task B", archive: "another-archive.zip" },
+  // Add more test cases archives, maybe implement fetching this from the db?
+];
 
 const MainPage = () => {
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <Checker archiveName={archiveName2} />
+        <Checker testCaseArchives={availableTestCaseArchives} />
       </div>
       <TasksTable archiveName={archiveName} markdownFilePath={markdownFilePath} />
     </div>

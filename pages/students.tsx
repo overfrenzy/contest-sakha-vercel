@@ -33,12 +33,12 @@ export default function HomePage() {
                 },
               }}
             >
-              <Button href="/students-2005">Участники-2005</Button>
-              <Button href="/students-2016">Участники-2016</Button>
-              <Button href="/students-2017">Участники-2017</Button>
-              <Button href="/students-2018">Участники-2018</Button>
-              <Button href="/students-2019">Участники-2019</Button>
-              <Button href="/students-2021">Участники-2021</Button>
+              <Button href="/students/students-2005">Участники-2005</Button>
+              <Button href="/students/students-2016">Участники-2016</Button>
+              <Button href="/students/students-2017">Участники-2017</Button>
+              <Button href="/students/students-2018">Участники-2018</Button>
+              <Button href="/students/students-2019">Участники-2019</Button>
+              <Button href="/students/students-2021">Участники-2021</Button>
             </ButtonGroup>
           </Grid>
         </Grid>

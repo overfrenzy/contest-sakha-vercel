@@ -2,20 +2,26 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import indexStyles from '../styles/index.module.css';
 
-type CheckerProps = {
-  archiveName: string;
+type ArchiveOption = {
+  name: string;
+  archive: string;
 };
 
-export function Checker({ archiveName }: CheckerProps) {
-  const [file, setFile] = useState(null);
+type CheckerProps = {
+  testCaseArchives: ArchiveOption[];
+};
+
+export function Checker({ testCaseArchives }: CheckerProps) {
+  const [file, setFile] = useState<File | null>(null);
+  const [selectedArchive, setSelectedArchive] = useState(testCaseArchives[0]);
   const [responseText, setResponseText] = useState('');
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    setFile(selectedFile || null);
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (file) {
@@ -25,7 +31,6 @@ export function Checker({ archiveName }: CheckerProps) {
 
         const headers = {
           'Content-Type': 'multipart/form-data',
-          'X-Archive-Name': archiveName,
         };
 
         const response = await axios.post(
@@ -33,6 +38,9 @@ export function Checker({ archiveName }: CheckerProps) {
           formData,
           {
             headers: headers,
+            params: {
+              archiveName: selectedArchive.archive,
+            },
           }
         );
 
@@ -52,6 +60,23 @@ export function Checker({ archiveName }: CheckerProps) {
       <h1 className={indexStyles.title}>Upload your solution</h1>
       <form onSubmit={handleSubmit}>
         <input type="file" onChange={handleFileChange} />
+        <select
+          value={selectedArchive.archive}
+          onChange={(event) => {
+            const selectedOption = testCaseArchives.find(
+              (option) => option.archive === event.target.value
+            );
+            if (selectedOption) {
+              setSelectedArchive(selectedOption);
+            }
+          }}
+        >
+          {testCaseArchives.map((option) => (
+            <option key={option.archive} value={option.archive}>
+              {option.name}
+            </option>
+          ))}
+        </select>
         <button type="submit">Upload</button>
       </form>
       {responseText && (

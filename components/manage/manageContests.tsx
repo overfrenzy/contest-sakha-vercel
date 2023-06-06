@@ -3,13 +3,13 @@ import {
   TextField,
   Button,
   Box,
-  InputLabel,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Paper,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
@@ -50,7 +50,7 @@ const ManageContests: React.FC = () => {
   const fetchContests = async () => {
     try {
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f" //fetch-db function
+        "https://functions.yandexcloud.net/d4e96bpn267cvipclv1f" // fetch-db function
       );
       const data = await response.json();
       setContests(data.contests);
@@ -66,32 +66,36 @@ const ManageContests: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(
-        "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b", //insertContest function
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: formData.name,
-            tasks: JSON.parse(formData.tasks || ""),
-            year: formData.year,
-          }),
-        }
-      );
+      const url = "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b"; // UpdateContest function with contest ID parameter
+  
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          tasks: JSON.parse(formData.tasks || ""),
+          year: formData.year,
+        }),
+      });
+  
       const data = await response.json();
       console.log(data);
-      setSuccessMessage("Contest added successfully");
+  
+      setSuccessMessage("Contest updated successfully");
       setFormData({ contestId: null, name: null, tasks: null, year: null });
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
+  
+      fetchContests();
     } catch (error) {
       console.error(error);
-      setErrorMessage("Error adding contest");
+      setErrorMessage("Error updating contest");
     }
-  };  
+  };
+  
 
-  const handleEdit = (contest: any) => {
+  const handleEdit = async (contest: Contest) => {
     setFormData({
       contestId: contest.contest_id,
       name: contest.name,
@@ -103,7 +107,7 @@ const ManageContests: React.FC = () => {
   const handleDelete = async (contestId: string) => {
     try {
       const response = await fetch(
-        "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b", //deleteContest function
+        "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b", // deleteContest function
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -111,6 +115,7 @@ const ManageContests: React.FC = () => {
         }
       );
       const data = await response.json();
+      console.log(data);
       setSuccessMessage("Contest deleted successfully");
       fetchContests();
     } catch (error) {
@@ -134,14 +139,6 @@ const ManageContests: React.FC = () => {
           variant="outlined"
         />
         <TextField
-          label="Tasks"
-          name="tasks"
-          value={formData.tasks || ""}
-          onChange={handleChange}
-          fullWidth
-          variant="outlined"
-        />
-        <TextField
           label="Year"
           name="year"
           type="number"
@@ -150,11 +147,19 @@ const ManageContests: React.FC = () => {
           fullWidth
           variant="outlined"
         />
+        <TextField
+          label="Tasks"
+          name="tasks"
+          value={formData.tasks || ""}
+          onChange={handleChange}
+          fullWidth
+          variant="outlined"
+        />
         <Button variant="contained" type="submit">
-          {formData.contestId ? "Update Contest" : "Add Contest"}
+          Add Contest
         </Button>
       </form>
-      <TableContainer>
+      <TableContainer component={Paper} sx={{ mt: 4 }}>
         <Table>
           <TableHead>
             <TableRow>

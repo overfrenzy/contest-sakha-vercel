@@ -2,9 +2,14 @@ import React, { useState, useRef } from "react";
 import { TextField, Button, Box, InputLabel } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
+interface Task {
+  name: string;
+  archive: string;
+}
+
 interface FormData {
   name: string | null;
-  tasks: string | null; 
+  tasks?: Task[] | null;
   year: number | null;
 }
 
@@ -15,7 +20,7 @@ const InputField = styled(TextField)({
 const InsertContest: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: null,
-    tasks: null,
+    tasks: undefined,
     year: null,
   });
   const [successMessage, setSuccessMessage] = useState("");
@@ -26,41 +31,49 @@ const InsertContest: React.FC = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        if (event.target && event.target.result) {
-          setFormData({
-            ...formData,
-            tasks: event.target.result as string,
-          });
-        }
-      };
-      reader.readAsText(file);
-    }
+  const handleTaskChange = (index: number, field: keyof Task, value: string) => {
+    const updatedTasks = [...(formData.tasks || [])];
+    updatedTasks[index] = { ...(updatedTasks[index] || {}), [field]: value };
+    setFormData({ ...formData, tasks: updatedTasks });
+  };
+
+  const addTask = () => {
+    const updatedTasks = [...(formData.tasks || []), { name: "", archive: "" }];
+    setFormData({ ...formData, tasks: updatedTasks });
+  };
+
+  const removeTask = (index: number) => {
+    const updatedTasks = [...(formData.tasks || [])];
+    updatedTasks.splice(index, 1);
+    setFormData({ ...formData, tasks: updatedTasks });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!formData.name || !formData.year) {
+      setErrorMessage("Please enter a valid name and year");
+      return;
+    }
     try {
+      const payload = {
+        name: formData.name,
+        tasks: JSON.stringify(formData.tasks),
+        year: formData.year,
+      };
+
       const response = await fetch(
         "https://functions.yandexcloud.net/d4e6fb7lqegfcrenni7b", // insertContest function
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: formData.name,
-            tasks: JSON.parse(formData.tasks || ""),
-            year: formData.year,
-          }),
+          body: JSON.stringify(payload),
         }
       );
+
       const data = await response.json();
       console.log(data);
       setSuccessMessage("Contest added successfully");
-      setFormData({ name: null, tasks: null, year: null });
+      setFormData({ name: "", tasks: undefined, year: null });
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -97,16 +110,31 @@ const InsertContest: React.FC = () => {
         <br />
         <InputLabel htmlFor="tasks">Contest Tasks:</InputLabel>
         <br />
-        <InputField
-          fullWidth
-          label="Tasks"
-          id="tasks"
-          name="tasks"
-          multiline
-          rows={4}
-          value={formData.tasks || ""}
-          onChange={handleChange}
-        />
+        {(formData.tasks || []).map((task, index) => (
+          <div key={index}>
+            <InputField
+              fullWidth
+              label={`Task ${index + 1} Name`}
+              name="name"
+              value={task.name}
+              onChange={(e) => handleTaskChange(index, "name", e.target.value)}
+            />
+            <InputField
+              fullWidth
+              label={`Task ${index + 1} Archive`}
+              name="archive"
+              value={task.archive}
+              onChange={(e) => handleTaskChange(index, "archive", e.target.value)}
+            />
+            <Button variant="contained" onClick={() => removeTask(index)}>
+              Remove Task
+            </Button>
+            <br />
+          </div>
+        ))}
+        <Button variant="contained" onClick={addTask}>
+          Add Task
+        </Button>
         <br />
         <Button variant="contained" type="submit">
           Add Contest

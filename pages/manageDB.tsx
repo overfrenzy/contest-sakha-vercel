@@ -2,9 +2,9 @@ import React from "react";
 import { Card, CardContent, Grid } from "@mui/material";
 import ManageAward from "../components/manage/manageAwards";
 import ManageContest from "../components/manage/manageContests"; //net yet implemented
-//import ManageCountry from "../components/manage/manageCountry";
-//import ManageSchoolName from "../components/manage/manageSchoolName";
-//import ManageParticipant from "../components/manage/manageParticipant";
+import ManageCountry from "../components/manage/manageCountries";
+import ManageSchoolName from "../components/manage/manageSchoolNames";
+//import ManageParticipant from "../components/manage/manageParticipants";
 import { useProtectedPage } from "../components/protectedPage";
 
 const ManageDB: React.FC = () => {
@@ -29,6 +29,20 @@ const ManageDB: React.FC = () => {
           <Card>
             <CardContent>
               <ManageContest />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Card>
+            <CardContent>
+              <ManageCountry />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Card>
+            <CardContent>
+              <ManageSchoolName />
             </CardContent>
           </Card>
         </Grid>

@@ -7,11 +7,10 @@ const authService = getCredentialsFromEnv();
 const driver = new Driver({ endpoint, database, authService });
 
 async function upsertContest(contestId, name, year, tasks) {
-  const tasksJson = JSON.stringify(tasks);
+  const tasksJson = JSON.stringify(tasks); 
   const query = `
     UPSERT INTO contest (contest_id, name, year, tasks)
-    VALUES ("${contestId}", "${name}", ${year}, ${tasksJson})
-  `;
+    VALUES ("${contestId}", "${name}", ${year}, '${tasksJson}')`;
   await driver.tableClient.withSession(async (session) => {
     await session.executeQuery(query);
   });
@@ -28,14 +27,16 @@ async function deleteContest(contestId) {
 }
 
 exports.handler = async (event, context) => {
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  };
+
   if (event.httpMethod === "OPTIONS") {
     return {
       statusCode: 200,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
+      headers,
       body: "",
     };
   }
@@ -45,6 +46,7 @@ exports.handler = async (event, context) => {
   if (!event.body || event.body.trim() === "") {
     return {
       statusCode: 400,
+      headers,
       body: JSON.stringify({ message: "Empty request body" }),
     };
   }
@@ -55,6 +57,7 @@ exports.handler = async (event, context) => {
   } catch (error) {
     return {
       statusCode: 400,
+      headers,
       body: JSON.stringify({ message: "Invalid JSON format" }),
     };
   }
@@ -63,26 +66,30 @@ exports.handler = async (event, context) => {
 
   if (event.httpMethod === "POST" || event.httpMethod === "PUT") {
     const id = contestId || uuidv4();
-    await upsertContest(id, name, parseInt(year, 10), tasks);
+    await upsertContest(id, name, parseInt(year, 10), JSON.parse(tasks));
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({ message: "Contest upserted successfully" }),
     };
   } else if (event.httpMethod === "DELETE") {
     if (!contestId) {
       return {
         statusCode: 400,
+        headers,
         body: JSON.stringify({ message: "Contest ID is required for deletion" }),
       };
     }
     await deleteContest(contestId);
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({ message: "Contest deleted successfully" }),
     };
   } else {
     return {
       statusCode: 400,
+      headers,
       body: JSON.stringify({ message: "Invalid HTTP method" }),
     };
   }
