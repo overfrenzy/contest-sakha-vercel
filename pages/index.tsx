@@ -39,6 +39,22 @@ export default function HomePage() {
               <Button href="/contests/tuy-2021">Туймаада-2021</Button>
             </ButtonGroup>
           </Grid>
+          <Grid item xs={12}>
+            <ButtonGroup
+              variant="contained"
+              color="primary"
+              size={isSmallScreen ? "small" : "medium"}
+              sx={{
+                flexWrap: isSmallScreen ? "wrap" : "nowrap",
+                "& .MuiButton-root": {
+                  minWidth: isSmallScreen ? "100%" : "auto",
+                  marginBottom: isSmallScreen ? "8px" : "0",
+                },
+              }}
+            >
+              <Button href="/tasks/tasks-2021">Задачи</Button> {/* Кнопка на отдельной строке */}
+            </ButtonGroup>
+          </Grid>
         </Grid>
       </Container>
     </div>
